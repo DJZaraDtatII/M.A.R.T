@@ -11,13 +11,12 @@ Mobile Android ROM Translation Tools
 - Command install:
 - `$ pkg update && pkg upgrade` enter 
 - `$ pkg install git` enter (skip if already installed)
-- `$ git clone https://github.com/rendiix/MART.git` enter
+- `$ git clone https://github.com/rendiix/M.A.R.T.git` enter
 - `$ cd MART` enter
-- `$ chmod +x gk.sh` enter
+- `$ chmod +x mart.sh` enter
 #####
 - Command launch:
-- `$ ./martgk.sh` from MART directory
--  or `$ martgk` 
+- `$ ./mart.sh` from M.A.R.T directory
 #####
 > This tools only tested on Mi5s yet.
 > Please help me to make this tool better
