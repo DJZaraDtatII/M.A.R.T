@@ -1,0 +1,61 @@
+# First Run
+export l_depinstall="Memasang dependencies..."
+export l_repo_pointless_install="Memasang repo Pointless..."
+export l_create_mart_shortcut="Membuat pintasan M.A.R.T"
+export l_create_mart_shortcut_done="Selanjutnya anda dapat memulai tools dengan\nmengetikkan${no} martgk${mag} pada terminal."
+
+# Notification
+export l_notif_done="Selesai..."
+export l_notif_on="Hidup"
+export l_notif_off="Mati"
+export l_notif_error="${me}Kesalahan!${no}"
+export l_notif_restart_choosen_lang="Untuk menerapkan perubahan mart\nakan memulai ulang"
+export l_notif_countdown_restart="memulai ulang dalam%2d detik"
+
+# Navigation
+export l_back_main="Kembali"
+export l_wrong_input="${me}Masukan salah!$no"
+export l_insert_opt="Masukkan pilihan:"
+
+# Main Menu
+export l_title_main_menu_info="Info:"
+export l_title_main_menu_mart_version="Versi MART:"
+export l_title_main_menu="Menu utama"
+export l_title_main_menu_current_project="Proyek saat ini:"
+export l_title_main_menu_choose="Pilih menu:"
+export l_title_main_menu_new_project="Buat proyek baru"
+export l_title_main_menu_continue_project="Lanjutkan proyek lain"
+export l_title_main_menu_rom_extract="Ekstrak menu"
+export l_title_main_menu_start_translation="ROM Translate"
+export l_title_main_menu_delete_project="Hapus proyek"
+export l_title_main_menu_settings="Pengaturan"
+export l_title_main_menu_about="Tentang M.A.R.T"
+export l_title_main_menu_exit="Keluar"
+export l_title_main_menu_exit_massage="${hi}Terima kasih sudah menggunakan M.A.R.T.\nJika tools ini bermanfaat silahkan share, report bugs,\natau donasi seiklasnya.$no\n\n${cya}gk-dev${no}\n"
+
+# Settings Menu
+export l_title_settings_menu="Menu Pengaturan"
+export l_title_settings_summary_repo="Pengaturan repo:"
+export l_title_settings_summary_apktool="Pengaturan APKTool:"
+export l_title_settings_apktool_version="Pilih versi apktool:"
+export l_title_settings_aapt="Pilih versi AAPT:"
+export l_title_settings_smali="Pilih versi smali:"
+export l_title_settings_baksmali="Pilih versi baksmali:"
+export l_title_settings_available_repositories="Daftar repositories yang tersedia"
+export l_title_settings_lang_translate="Bahasa terjemahan:"
+export l_title_settings_summary_mart="Pengaturan M.A.R.T:"
+export l_title_settings_auto_update="Pembaruan otomatis:"
+export l_title_settings_check_update="Periksa pembaruan"
+export l_title_settings_mart_language="Bahasa MART"
+export l_title_settings_update_available="Pembaruan tersedia"
+export l_title_settings_summary_list_available_language="Pilih bahasa"
+export l_title_settings_choosen_mart_lang=" terpilih sebagai bahasa default"
+
+#Poject
+export l_create_new_project="Masukkan nama proyek"
+export l_create_new_project_already="Nama proyek sudah ada, masukkan nama lain"
+export l_continue_project_summary="Daftar list proyek:"
+export l_continue_project_choosen="terpilih sebagai proyek default"
+export l_delete_project_summary="Pilih folder proyek yang akan dihapus:"
+export l_delete_project_choosen="Sudah dihapus"
+export l_delete_project_error="adalah proyek default.\nSilahkan pilih proyek lain"

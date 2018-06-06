@@ -1,0 +1,88 @@
+#!/data/data/com.termux/files/usr/bin/bash
+TYPE_SPEED=25
+NO_WAIT=false
+PROMPT_TIMEOUT=0
+function usage() {
+  echo -e ""
+  echo -e "Usage: $0 [options]"
+  echo -e ""
+  echo -e "\tWhere options is one or more of:"
+  echo -e "\t-h\tPrints Help text"
+  echo -e "\t-d\tDebug mode. Disables simulated typing"
+  echo -e "\t-n\tNo wait"
+  echo -e "\t-w\tWaits max the given amount of seconds before proceeding with demo (e.g. `-w5`)"
+  echo -e ""
+}
+
+function wait() {
+  if [[ "$PROMPT_TIMEOUT" == "0" ]]; then
+    read -rs
+  else
+    read -rst "$PROMPT_TIMEOUT"
+  fi
+}
+
+function p() {
+  cmd=$1
+
+  # render the prompt
+  x=$(PS1="$DEMO_PROMPT" "$BASH" --norc -i </dev/null 2>&1 | sed -n '${s/^\(.*\)exit$/\1/p;}')
+  printf "$x"
+
+  # wait for the user to press a key before typing the command
+  if !($NO_WAIT); then
+    wait
+  fi
+
+  if [[ -z $TYPE_SPEED ]]; then
+    echo -en "\033[0m$cmd"
+  else
+    echo -en "\033[0m$cmd" | pv -qL $[$TYPE_SPEED+(-2 + RANDOM%5)];
+  fi
+
+  # wait for the user to press a key before moving on
+  if !($NO_WAIT); then
+    wait
+  fi
+  echo ""
+}
+
+function pe() {
+  # print the command
+  p "$@"
+
+  # execute the command
+  eval "$@"
+}
+
+function cmd() {
+  # render the prompt
+  x=$(PS1="$DEMO_PROMPT" "$BASH" --norc -i </dev/null 2>&1 | sed -n '${s/^\(.*\)exit$/\1/p;}')
+  printf "$x\033[0m"
+  read command
+  eval "${command}"
+}
+
+
+function check_pv() {
+  command -v pv >/dev/null 2>&1
+}
+
+check_pv
+
+while getopts ":dhnw:" opt; do
+  case $opt in
+    h)
+      usage
+      exit 1
+      ;;
+    d)
+      unset TYPE_SPEED
+      ;;
+    n)
+      NO_WAIT=true
+      ;;
+    w)
+      PROMPT_TIMEOUT=$OPTARG
+  esac
+done
