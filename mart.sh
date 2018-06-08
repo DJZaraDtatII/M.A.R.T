@@ -12,6 +12,7 @@ tbl="\e[1m"
 dim="\e[2m"
 no="\e[0m"
 bnr() {
+clear
 clm=$(tput cols)
 banner1="* M.A.R.T - Mobile Android ROM Translator *"
 banner2="* by gk-dev *"
@@ -30,6 +31,7 @@ echo -e "$tbl$mag$devider$no"
 
 first_install() {
 	bnr;
+	yes | pkg install wget 
 	p "${ku}$l_repo_pointless_install"
 	echo -e "$mag"
 	mkdir $PREFIX/etc/apt/sources.list.d
@@ -44,15 +46,19 @@ first_install() {
 	p "${ku}$l_depinstall"
 	echo -e "$mag"
 	yes | pkg up
-	yes | pkg install python readline coreutils unzip tar file figlet curl wget gnup* grep ncurs* p7zip zip unzip pv proot util-linux sed awk
+	yes | pkg install binutils* python readline coreutils unzip tar file figlet curl gnup* grep ncurses* p7zip zip unzip pv proot util-linux sed awk
 	echo -e "\n${hi}$l_notif_done"
 	sleep 2
 	bnr;
-	p "\n${ku}l_create_mart_shortcut${no}\n"
-	ln -s $root/gk.sh $PREFIX/bin/gkmart
+	p "\n${ku}$l_create_mart_shortcut${no}\n"
+	ln -s $root/gk.sh $PREFIX/bin/mart
 	sleep 2
 	p "\n${hi}$l_notif_done\n${no}\n${mag}$l_create_mart_shortcut_done${no}"
-	sleep 5
+	for i in {5..0}; do 
+		printf "\r$l_notif_countdown_enter_menu" $i
+		sleep 1
+	done
+	main_menu;
 }
 choose_language() {
 	current_lang="$(cat $mart_set | grep "settings_language" | cut -d"=" -f2)"
@@ -298,6 +304,29 @@ about_mart() {
 	main_menu;
 }
 
+menu_build() {
+	bnr;
+	echo -e "${tbl}${ku}$l_build_rom_menu${no}
+
+  ${dim}1. $l_translate_menu$no
+  
+  2. $l_repack
+  3. $l_repack_from_device
+  
+  0. ${ku}$l_back$no
+"
+	echo -e "${ku}$l_insert_options${no}";
+	while read env; do
+		case $env in
+			1) comming_soon; break;;
+			2) repack; break;;
+			3) repack_from_device; break;;
+			0) main_menu; break;;
+		esac
+	done
+}
+
+
 main_menu() {
 	bnr
 	countp=""
@@ -356,4 +385,8 @@ source $tools/settings/demo -w0.1
 DEMO_PROMPT=""
 curret_version=$(grep "# MART V" README.md | cut -d" " -f3)
 choose_language;
-main_menu;
+if [ ! -d "$target" ]; then
+	first_install;
+else
+	main_menu;
+fi
