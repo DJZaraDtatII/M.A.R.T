@@ -31,22 +31,12 @@ echo -e "$tbl$mag$devider$no"
 
 first_install() {
 	bnr;
-	yes | pkg install wget 
-	p "${ku}$l_repo_pointless_install"
-	echo -e "$mag"
-	mkdir $PREFIX/etc/apt/sources.list.d
-	echo "deb [trusted=yes] https://its-pointless.github.io/files/ termux extras" > $PREFIX/etc/apt/sources.list.d/pointless.list
-	wget https://its-pointless.github.io/pointless.gpg
-	apt-key add pointless.gpg
-	apt update
-	rm pointless.gpg
-	echo -e "\n${hi}$l_notif_done"
-	sleep 2
+	yes | pkg up
+	yes | pkg install pv
 	bnr;
 	p "${ku}$l_depinstall"
 	echo -e "$mag"
-	yes | pkg up
-	yes | pkg install binutils* python readline coreutils unzip tar file figlet curl gnup* grep ncurses* p7zip zip unzip pv proot util-linux sed awk
+	yes | pkg install binutils* python readline coreutils unzip tar file figlet curl gnup* grep ncurses* p7zip zip unzip proot util-linux sed
 	echo -e "\n${hi}$l_notif_done"
 	sleep 2
 	bnr;
