@@ -481,6 +481,7 @@ ${tbl}${ku}$l_title_main_menu${no}
 		esac
 	done
 }
+termux-setup-storage
 gkhome=$(pwd)
 export root=$gkhome
 cd $root
