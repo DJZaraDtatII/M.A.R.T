@@ -1,4 +1,4 @@
-# MART V0.1.180507
+# MART V0.1.180810
 Mobile Android ROM Translation Tools
 ## Requirements:
 - CPU architecture    : aarch64

@@ -8,9 +8,11 @@ export l_create_mart_shortcut_done="Selanjutnya anda dapat memulai tools dengan\
 export l_notif_done="Selesai..."
 export l_notif_on="Hidup"
 export l_notif_off="Mati"
+export l_notif_yes="Ya"
+export l_notif_no="Tidak"
 export l_notif_error="${me}Kesalahan!${no}"
 export l_notif_restart_choosen_lang="Untuk menerapkan perubahan bahasa\nmart akan memulai ulang."
-export l_notif_countdown_restart="memulai ulang dalam%2d detik"
+export l_notif_countdown_restart="memulai ulang dalam %2d detik"
 export l_notif_countdown_enter_menu="Masuk menu utama dalam%2d detik"
 
 # Navigation
@@ -72,9 +74,30 @@ export l_extract_reinsert_zip="Silahkan masukkan rom.zip kedalam folder:"
 export l_extract_notif="Mengekstrak:"
 export l_extract_unpack_notif="Unpacking:"
 export l_extract_convert_notif="Mengkonvert:"
+export l_extract_done="Proses ekstrak selesai..."
 
 # Build ROM menu
+export l_project_build_info="Info ROM:"
 export l_build_rom_menu="Build ROM menu:"
 export l_translate_menu="Translate(comming soon)"
-export l_repack="Repack ROM dari proyek"
+export l_debloat_menu="Hapus bloatware"
+export l_debloat_status_toggle="Status debloated ="
+export l_repack="Buat flashable zip ROM"
 export l_repack_from_device="Repack ROM yang terinstal"
+
+# Build ZIP
+export l_build_img="Membuat raw img..."
+export l_fc_type_alert="File_contexts.bin terdeteksi, mengkonvert..."
+export l_make_sparse="Membuat sparse img..."
+export l_make_dat="Membuat DAT img..."
+export l_compress_zip="Mengkompres zip..."
+export l_insert_zip_name="Masukkan nama zip (tekan enter untuk melewati)"
+export l_build_done_alert="Selesai... file tersimpan di:"
+
+# Update
+export l_check_update="Memeriksa pembaruan..."
+export l_check_update_error="Kesalahan! Tidak dapat memeriksa pembaruan"
+export l_no_update="Tidak ada pembaruan tersedia"
+export l_update_avail="Update tersedia"
+export l_downloading_update="Mengunduh pembaruan..."
+

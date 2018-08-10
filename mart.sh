@@ -12,7 +12,6 @@ tbl="\e[1m"
 dim="\e[2m"
 no="\e[0m"
 bnr() {
-clear
 clm=$(tput cols)
 banner1="* M.A.R.T - Mobile Android ROM Translator *"
 banner2="* by gk-dev *"
@@ -54,6 +53,7 @@ first_install() {
 	ln -s $root/gk.sh $PREFIX/bin/mart
 	sleep 2
 	p "\n${hi}$l_notif_done\n${no}\n${mag}$l_create_mart_shortcut_done${no}"
+	sed -i "s/settings_first_run=1/settings_first_run=0/g" $mart_set
 	for i in {5..0}; do 
 		printf "\r$l_notif_countdown_enter_menu" $i
 		sleep 1
@@ -124,7 +124,7 @@ $l_title_settings_summary_mart
 					sed -i "s/$crlng/${opt}-lng/g" $mart_set
 					echo -e "\n$l_notif_restart_choosen_lang\n"
 						for i in {5..0}; do 
-							printf "\r$l_notif_countdown_restart" $i
+							printf "\a\r$l_notif_countdown_restart" $i
 							sleep 1
 						done
 					reset 2&1>/dev/null
@@ -136,6 +136,47 @@ $l_title_settings_summary_mart
 			*) echo -e "${me}$l_title_main_menu_wrong_options${no}";;
 		esac
 	done
+}
+
+check_update(){
+	bnr;
+	p "${ku}$l_check_update${no}"
+	newv="$(curl -s curl https://raw.githubusercontent.com/rendiix/M.A.R.T/master/README.md | grep "MART V" | cut -d" " -f3 | cut -d"." -f3)"
+	curv="$(grep "MART V" README.md | cut -d" " -f3 | cut -d"." -f3)"
+	if [ -z "$newv" ]; then
+		bnr;
+		p "${me}$l_check_update_error${no}"
+		sleep 2
+		main_menu;
+			else 
+				if [ "$curv" -eq "$newv" ]; then
+					bnr;
+					p "${hi}$l_no_update${no}"
+					sleep 2
+					main_menu;
+						else
+							if [ "$curv" -lt "$newv" ]; then
+								export update_avail="$update_avail"
+								echo -e "\n${ku}$l_update_avail${no} ${co}V$newv"
+								p "\n${hi}$l_downloading_update$mag\n"
+								mkdir temp
+								wget https://codeload.github.com/rendiix/M.A.R.T/zip/master -O $root/temp/mart.zip
+								echo -e "\n${hi}$l_install_update"
+								7z x -o$root/temp/ $root/temp/adu.zip
+								cp -R $root/temp/*/* $root
+								rm -R $root/temp
+								chmod +x *
+								chmod +x tools/*
+								p "${hi}$l_notif_done${no}\n"
+									for i in {5..0}; do 
+										printf "\a\r$l_notif_countdown_restart" $i
+										sleep 1
+									done
+								reset 2&1>/dev/null
+								./mart.sh
+							fi
+				fi
+	fi
 }
 
 menu_new_project() {
@@ -234,9 +275,10 @@ menu_rom_extract() {
 			1) #start extracting zip from workdir
 				while :; do
 				bnr;
+				mkdir $workdir/.tmp
+				cp $setfd/project_info $workdir/.tmp/
 				findzip=""
 				findzip="$(ls $workdir | grep ".zip")"
-				zipfile="$(basename $findzip)"
 				if [ -z $findzip ]; then
 					echo -e "$l_notif_error\n"
 					echo -e "$l_extract_missing_zip ${co}$currentpr$no\n"
@@ -244,20 +286,32 @@ menu_rom_extract() {
 					sleep 5
 					menu_rom_extract
 				else
-					echo "mart_in_zipname=$zipfile" >> $workdir/project_info.txt
+					zipfile="$(basename $findzip)"
+					oldnamezip="$(cat $setfd/project_info | grep "mart_zip_orig_name" | cut -d"=" -f2)"
+					sed -i "s/$oldnamezip/$zipfile/g" $workdir/.tmp/project_info
 					echo -e "$l_extract_notif ${co}$zipfile...$no\n"
-					mkdir $workdir/exrom
-					7z x $workdir/$zipfile -o$workdir/exrom
-					typeimg="$(ls $workdir/exrom/ | grep "system.new.dat")"
-					if [ -f "$workdir/exrom/$typeimg" ]; then
+					mkdir $workdir/orig_rom
+					7z x $workdir/$zipfile -o$workdir/orig_rom
+					typeimg="$(ls $workdir/orig_rom/ | grep "system.new.dat")"
+					if [ -f "$workdir/orig_rom/$typeimg" ]; then
 						export d2m=$tools/imgtools/sdat2img.py
-						mkdir $workdir/.tmp
 						bnr;
 						echo -e "$l_extract_unpack_notif ${co}$typeimg$no\n"
-						$d2m $workdir/exrom/system.transfer.list $workdir/exrom/system.new.dat $workdir/.tmp/raw.img
+						$d2m $workdir/orig_rom/system.transfer.list $workdir/orig_rom/system.new.dat $workdir/.tmp/raw.img
+						rm $workdir/orig_rom/*.dat
 						imgsize="$(wc -c $workdir/.tmp/raw.img | cut -d" " -f1)"
-						echo "mart_getimgsize=$imgsize" >> $workdir/project_info.txt
+						oldnameimgsize="$(cat $setfd/project_info | grep "mart_getimgsize" | cut -d"=" -f2)"
+						sed -i "s/$oldnameimgsize/$imgsize/g" $workdir/.tmp/project_info
+						mkdir $workdir/system
+						7z x -o$workdir/system/ $workdir/.tmp/raw.img
+						rm $workdir/.tmp/raw.img
 					fi
+					bnr;
+					echo -e "${hi}$l_extract_done\n"
+					for i in {5..0}; do
+						printf "\r$l_notif_countdown_enter_menu" $i
+						sleep 1
+					done
 					main_menu 
 				fi
 				done ; break;;
@@ -306,12 +360,18 @@ about_mart() {
 
 menu_build() {
 	bnr;
-	echo -e "${tbl}${ku}$l_build_rom_menu${no}
+	if [[ "$(cat $workdir/.tmp/project_info | grep "mart_debloat_info" | cut -d"=" -f2)" == "0" ]]; then
+		debloattogle="$l_notif_no"
+	else
+		debloattogle="$l_notif_yes"
+	fi
+	echo -e "
+${tbl}${ku}$l_build_rom_menu${no}
 
   ${dim}1. $l_translate_menu$no
   
-  2. $l_repack
-  3. $l_repack_from_device
+  2. $l_debloat_menu : $l_debloat_status_toggle $debloattogle
+  3. $l_repack
   
   0. ${ku}$l_back$no
 "
@@ -319,27 +379,77 @@ menu_build() {
 	while read env; do
 		case $env in
 			1) comming_soon; break;;
-			2) repack; break;;
-			3) repack_from_device; break;;
+			2) debloat_menu; break;;
+			3) build_zip; break;;
 			0) main_menu; break;;
 		esac
 	done
 }
 
+build_zip() {
+	bnr;
+	p "${hi}$l_build_img\n$no"
+	if [ -f "$workdir/orig_rom/file_contexts.bin" ]; then
+		p "${ku}$l_fc_type_alert$no"
+		$imgtools/sefcontext_decompile -x $workdir/.tmp/file_contexts $workdir/orig_rom/file_contexts.bin
+	fi
+	ukuran="$(cat $workdir/.tmp/project_info | grep "mart_getimgsize" | cut -d"=" -f2)"
+    echo -e "$mag"
+    $imgtools/make_ext4fs -T -0 -S $workdir/.tmp/file_contexts -L system -l ${ukuran} -a system $workdir/.tmp/raw.img $workdir/system/
+    p "${hi}$l_make_sparse$no"
+    echo -e "$mag"
+    $imgtools/img2simg $workdir/.tmp/raw.img $workdir/.tmp/sparse.img 4096
+    rm -r $workdir/.tmp/raw.img
+    p "${hi}$l_make_dat${no}"
+    echo -e "$mag"
+    api="$(cat $workdir/system/build.prop | grep "ro.build.version.sdk" | cut -d"=" -f 2)"
+	if [[ $api = "21" ]]; then
+			is="1"
+		elif [[ $api = "22" ]]; then
+			is="2"
+		elif [[ $api = "23" ]]; then
+			is="3"
+		elif [[ $api -ge "24" ]]; then
+			is="4"
+    fi
+    $imgtools/img2sdat.py $workdir/.tmp/sparse.img -o $workdir/.tmp/ -v ${is}
+    rm -r $workdir/.tmp/sparse.img
+    echo -e "$no"
+    p "${hi}$l_compress_zip\n$no"
+    mv $workdir/.tmp/system.* $workdir/orig_rom/
+	echo -e "${ku}$l_insert_zip_name$no"
+	read zipname1
+	if [ -z "$zipname1" ]; then
+		export zipname="$currentpr"
+		else
+		export zipname=$(echo "$zipname1" | sed 's/ /_/g' | sed 's/@/_/g')
+	fi
+	cd $workdir/orig_rom/
+	zip -r $workdir/${zipname}.zip
+	echo -e "\n${hi}$l_build_done_alert$no"
+	echo -e "\n$workdir/${zipname}.zip\n"
+	cd $root
+	for i in {5..0}; do
+		printf "\r$l_notif_countdown_enter_menu" $i
+		sleep 1
+	done
+    main_menu
+}
 
 main_menu() {
-	bnr
+	bnr;
 	countp=""
 	countp=$(ls -d $target/* 2>/dev/null | grep "mart_" | wc -l)
 	if [[ "$countp" = "0" ]]; then
 		menu_new_project;
 		fi
 	currentpr="$(cat $mart_set | grep "settings_current_project" | cut -d"=" -f 2)"
+	export workdir=$target/$currentpr
 	mmenu="
 ${tbl}${ku}$l_title_main_menu_info${no}
 
 $l_title_main_menu_current_project @: ${cya}$currentpr$no
-$l_title_main_menu_mart_version @: ${mag}$mart_version$no
+$l_title_main_menu_mart_version @: ${mag}$mart_version$no ${hi}$update_avail$no
 
 ${tbl}${ku}$l_title_main_menu${no}
 
@@ -374,7 +484,7 @@ gkhome=$(pwd)
 export root=$gkhome
 cd $root
 export tools=$root/tools
-export mkfs=$tools/img/toolsmake_ext4fs
+export imgtools=$tools/imgtools
 target=~/storage/shared/M.A.R.T
 projectdir="$target/project"
 logsdir="$target/logs"
@@ -385,8 +495,12 @@ source $tools/settings/demo -w0.1
 DEMO_PROMPT=""
 curret_version=$(grep "# MART V" README.md | cut -d" " -f3)
 choose_language;
-if [ ! -d "$target" ]; then
+
+if [ "$(cat $mart_set | grep "settings_first_run" | cut -d"=" -f2)" == "1" ]; then
 	first_install;
-else
-	main_menu;
+	elif [ "$(cat $mart_set | grep "settings_auto_update" | cut -d"=" -f2)" == "1" ]; then
+		check_update;
+		main_menu;
+	else
+		main_menu
 fi
