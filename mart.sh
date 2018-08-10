@@ -12,6 +12,7 @@ tbl="\e[1m"
 dim="\e[2m"
 no="\e[0m"
 bnr() {
+clear
 clm=$(tput cols)
 banner1="* M.A.R.T - Mobile Android ROM Translator *"
 banner2="* by gk-dev *"
@@ -162,7 +163,7 @@ check_update(){
 								mkdir temp
 								wget https://codeload.github.com/rendiix/M.A.R.T/zip/master -O $root/temp/mart.zip
 								echo -e "\n${hi}$l_install_update"
-								7z x -o$root/temp/ $root/temp/adu.zip
+								7z x -o$root/temp/ $root/temp/mart.zip
 								cp -R $root/temp/*/* $root
 								rm -R $root/temp
 								chmod +x *
