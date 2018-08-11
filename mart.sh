@@ -30,6 +30,7 @@ echo -e "$tbl$mag$devider$no"
 }
 
 first_install() {
+	echo -e "${mag}l_first_alert"
 	yes | pkg up
 	yes | pkg install pv
 	p "${ku}$l_depinstall"
@@ -67,6 +68,13 @@ settings_menu() {
 	aapt_v="$(cat $mart_set | grep "settings_aapt" | cut -d"=" -f 2)"
 	smali_v="$(cat $mart_set | grep "settings_smali" | cut -d"=" -f 2)"
 	baksmali_v="$(cat $mart_set | grep "settings_baksmali" | cut -d"=" -f 2)"
+	if [[ "$(cat $mart_set | grep "settings_auto_update" | cut -d"=" -f2)" == "1" ]]; then
+		update_togle=""
+		update_togle="$l_notif_on"
+	else
+		update_togle=""
+		update_togle="$l_notif_off"
+	fi
 	bnr;
 	ech="${tbl}${ku}$l_title_settings_menu${no}
 
@@ -81,7 +89,7 @@ $l_title_settings_summary_apktool
  6. $l_title_settings_baksmali @: $cya$baksmali_v$no
 
 $l_title_settings_summary_mart
- 7. $l_title_settings_auto_update
+ 7. $l_title_settings_auto_update @: $cya$update_togle$no
  8. $l_title_settings_check_update
  9. $l_title_settings_mart_language
  
@@ -98,8 +106,33 @@ $l_title_settings_summary_mart
 			4) main_menu; break;;
 			5) main_menu; break;;
 			6) main_menu; break;;
-			7) main_menu; break;;
-			8) main_menu; break;;
+			7) #Auto update options
+				if [[ "$(cat $mart_set | grep "settings_auto_update" | cut -d"=" -f2)" == "1" ]]; then
+					echo -e "$mag"
+					toggle_auto_update="$l_auto_update_off"
+					choice=""
+					read -n 1 -p "$toggle_auto_update" choice
+						if [[ $choice = "y" ]]; then
+							sed -i "s/settings_auto_update=1/settings_auto_update=0/g" $mart_set
+							echo -e "$no"
+							settings_menu;
+						else
+    						settings_menu;
+    					fi
+				elif [[ "$(cat $mart_set | grep "settings_auto_update" | cut -d"=" -f2)" == "0" ]]; then
+					echo -e "$mag"
+					toggle_auto_update="$l_auto_update_on"
+					choice=""
+					read -n 1 -p "$toggle_auto_update" choice
+						if [[ $choice = "y" ]]; then
+							sed -i "s/settings_auto_update=0/settings_auto_update=1/g" $mart_set
+							echo -e "$no"
+							settings_menu;
+						else
+    						settings_menu;
+    					fi
+				fi; break;;
+			8) check_update; break;;
 			9) #language settings
 				while :; do
 				bnr;
@@ -185,6 +218,8 @@ menu_new_project() {
 	fi
 		if [[ ! $(ls -d $target/*/ 2>/dev/null | grep "mart_$romname/") ]]; then
 			mkdir -p $target/mart_$romname/.logs
+			mkdir -p $target/mart_$romname/.tmp
+			cp $setfd/project_info $target/mart_$romname/.tmp
 			if [[ -z "$currentpr" ]]; then
 				sed -i "s/settings_current_project=/settings_current_project=mart_$romname/g" $mart_set
 				else
@@ -263,8 +298,6 @@ menu_rom_extract() {
 			1) #start extracting zip from workdir
 				while :; do
 				bnr;
-				mkdir $workdir/.tmp
-				cp $setfd/project_info $workdir/.tmp/
 				findzip=""
 				findzip="$(ls $workdir | grep ".zip")"
 				if [ -z $findzip ]; then

@@ -1,4 +1,5 @@
 # First Run
+export l_first_alert="Sedang mempersiapkan..."
 export l_depinstall="Memasang dependencies..."
 export l_repo_pointless_install="Memasang repo Pointless..."
 export l_create_mart_shortcut="Membuat pintasan M.A.R.T"
@@ -100,4 +101,5 @@ export l_check_update_error="Kesalahan! Tidak dapat memeriksa pembaruan"
 export l_no_update="Tidak ada pembaruan tersedia"
 export l_update_avail="Update tersedia"
 export l_downloading_update="Mengunduh pembaruan..."
-
+export l_auto_update_off="Matikan pembaruan otomatis? [y/n]"
+export l_auto_update_on="Hidupkan pembaruan otomatis? [y/n]"
