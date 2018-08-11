@@ -30,16 +30,13 @@ echo -e "$tbl$mag$devider$no"
 }
 
 first_install() {
-	bnr;
 	yes | pkg up
 	yes | pkg install pv
-	bnr;
 	p "${ku}$l_depinstall"
 	echo -e "$mag"
 	yes | pkg install binutils* python readline coreutils unzip tar file figlet curl gnup* grep ncurses* p7zip zip unzip proot util-linux sed
 	echo -e "\n${hi}$l_notif_done"
 	sleep 2
-	bnr;
 	p "\n${ku}$l_create_mart_shortcut${no}\n"
 	ln -s $root/gk.sh $PREFIX/bin/mart
 	sleep 2
@@ -488,7 +485,7 @@ DEMO_PROMPT=""
 curret_version=$(grep "# MART V" README.md | cut -d" " -f3)
 choose_language;
 
-if [ "$(cat $mart_set | grep "settings_first_run" | cut -d"=" -f2)" == "1" ]; then
+if [ ! -d $target ]; then
 	first_install;
 	elif [ "$(cat $mart_set | grep "settings_auto_update" | cut -d"=" -f2)" == "1" ]; then
 		check_update;
