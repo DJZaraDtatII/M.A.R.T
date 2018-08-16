@@ -1,0 +1,5 @@
+# list available repositories
+# to add another repositories use format
+# mart_repositories=<link git repositories>=<language>
+
+mart_repositories=https://github.com/rendixx/MA-XML-8.0-INDONESIA.git=Indonesia

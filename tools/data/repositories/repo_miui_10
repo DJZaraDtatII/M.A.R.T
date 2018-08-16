@@ -1,0 +1,3 @@
+# list available repositories
+# to add another repositories use format
+# mart_repositories=<link git repositories>=<language>

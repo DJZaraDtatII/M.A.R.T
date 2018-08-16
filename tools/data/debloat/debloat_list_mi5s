@@ -1,3 +1,4 @@
+#system app
 AnalyticsCore
 BasicDreams
 Chrome
@@ -24,5 +25,11 @@ Videos
 VirtualSim
 VsimCore
 YouDaoEngine
-Youtube
+YouTube
 
+#system priv-app
+facebook-installer
+facebook-services
+
+#system
+recovery-from-boot.p
