@@ -2,4 +2,21 @@
 # to add another repositories use format
 # mart_repositories=<link git repositories>=<language>
 
-mart_repositories=https://github.com/rendixx/MA-XML-8.0-INDONESIA.git=Indonesia
+mart_repositories=https://github.com/Belmont-Gabriel/MIUI9-XML-Vietnamese=Vietnamese (Belmont-Gabriel)
+mart_repositories=https://github.com/berlinux2016/MIUI9-ger=Deutsch (muhamed89, cp82, dahool2016, and more)
+mart_repositories=https://github.com/ingbrzy/MA-XML-8.0-SPANISH=Español (Jamflux, Infante007)
+mart_repositories=https://github.com/MiFrance/miui-xml-V7-FRENCH=Français (cpasmoi, MiFrance)
+mart_repositories=https://github.com/PRInCEI7/MIUI-8-ARABIC=Arabic (PRInCEI7)
+mart_repositories=https://github.com/MASVA/MA-XML-9.0-CROATIAN=Hrvatski (Masva, MIUI Adria)
+mart_repositories=https://github.com/MishFdM/MIUI_V9_Italy=Italiano (miui.it)
+mart_repositories=https://github.com/cjhyuky/MA-XML-MIUI9-Korean=Korean (cjhyuky)
+mart_repositories=https://github.com/redmaner/MIUI9-XML-DUTCH=Nederlands (cueie, mannyribo, redmaner)
+mart_repositories=https://github.com/miui-scandinavia/MA-XML-9.0-NORWEGIAN=Norwegian (datagutt, miuios.no)
+mart_repositories=https://github.com/KcNirvana/MA-XML-9.0-PORTUGUESE=Portugues (Portugal) (Efex, KcNirvana, Lippe35)
+mart_repositories=https://github.com/ashtefan/Romanian_MIUI9=Romanian (ashtefan)
+mart_repositories=https://github.com/ingbrzy/MA-XML-9.0-TURKISH=Turkish (Celaleddin, ekilciler)
+mart_repositories=https://github.com/tmladenov/MIUI-V8-BULGARIAN=Bulgarian (tmladenov, miui.bg)
+mart_repositories=https://github.com/dudjaa/MIUI-V9-Serbian-Translation=Serbian (dudjaa)
+mart_repositories=https://github.com/kkffiirr/MIUI7_Hebrew=Hebrew (Kkffiirr, Eliran0216)
+mart_repositories=https://github.com/helmiau/XML-MIUI10-INDONESIA=Indonesia (helmiau)
+mart_repositories=https://github.com/ScratchBuild/MIUI9-XML-Japanese=Japanese (ScratchBuild)

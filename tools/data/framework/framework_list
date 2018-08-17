@@ -1,0 +1,8 @@
+# Edit this if u have custom framework list
+
+system/app/miui/miui.apk
+system/app/miuisystem/miuisystem.apk
+system/app/SmsExtra/SmsExtra.apk
+system/framework/framework-ext-res/framework-ext-res.apk
+system/framework/framework-res.apk
+system/priv-app/PersonalAssistantGlobal/PersonalAssistantGlobal.apk

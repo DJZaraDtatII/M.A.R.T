@@ -70,6 +70,7 @@ quit() {
 }
 
 settings_menu() {
+	repo_version="$(cat $mart_set | grep "settings_repo_version" | cut -d"=" -f 2)"
 	repo_lang="$(cat $mart_set | grep "settings_repo_language" | cut -d"=" -f 2)"
 	apktool_v="$(cat $mart_set | grep "settings_apktool" | cut -d"=" -f 2)"
 	aapt_v="$(cat $mart_set | grep "settings_aapt" | cut -d"=" -f 2)"
@@ -86,7 +87,7 @@ settings_menu() {
 	ech="${tbl}${ku}$l_title_settings_menu${no}
 
 $l_title_settings_summary_repo
- 1. $l_title_settings_available_repositories
+ 1. $l_title_settings_repositories_version @: $cya$repo_version$no
  2. $l_title_settings_lang_translate @: $cya$repo_lang$no
 
 $l_title_settings_summary_apktool
@@ -106,11 +107,59 @@ $l_title_settings_summary_mart
 	echo -e "${ku}$l_insert_options${no}";
 	while read env; do
 		case $env in
-			1) #Choosing default
-				main_menu; break;;
-			2) main_menu; break;;
-			3) main_menu; break;;
-			4) main_menu; break;;
+			1) #Choosing repo version
+				bnr;
+				echo -e "${tbl}${ku}$l_title_settings_repositories_version:$no\n"
+				while :; do
+				names=""
+				names=( $(ls $tools/data/repositories/* | rev | cut -d"/" -f1 | rev) )
+				dym opt in ${names[@]}
+					if [ "$opt" != "" ]; then
+						oldversion="$(cat $mart_set | grep "settings_repo_version" | cut -d"=" -f2)"
+						sed -i "s/$oldversion/$opt/g" $mart_set
+						settings_menu;
+					fi
+				done; break;;
+			2) #Choosing repo lang
+				repover="$(cat $mart_set | grep "settings_repo_version" | cut -d"=" -f2)"
+				bnr;
+				echo -e "${tbl}${ku}$l_title_settings_repositories_lang:$no\n"
+				while :; do
+				replang=""
+				replang="$(cat $tools/data/repositories/$repover | egrep -v '(^#|^$)' | grep "mart_repositories" | cut -d"=" -f3 | cut -d" " -f1)"
+				dym opt in ${replang[@]}
+					if [ "$opt" != "" ]; then
+						oldlang="$(cat $mart_set | grep "settings_repo_lang" | cut -d"=" -f2)"
+						sed -i "s/$oldlang/$opt/g" $mart_set
+						settings_menu;
+					fi
+				done; break;;
+			3) #Choosing apktool version
+				bnr;
+				echo -e "${tbl}${ku}$l_title_settings_apktool_version:$no\n"
+				while :; do
+				names=""
+				names=( $(ls $libapktool/apktool/* | grep "apktool-" | rev | cut -d"/" -f1 | rev) )
+				dym opt in ${names[@]}
+					if [ "$opt" != "" ]; then
+						oldapktool="$(cat $mart_set | grep "settings_apktool" | cut -d"=" -f2)"
+						sed -i "s/$oldapktool/$opt/g" $mart_set
+						settings_menu;
+					fi
+				done; break;;
+			4) #Choosing aapt version
+				bnr;
+				echo -e "${tbl}${ku}$l_title_settings_aapt:$no\n"
+				while :; do
+				names=""
+				names=( $(ls $libapktool/apktool/openjdk/bin/* | grep "aapt" | rev | cut -d"/" -f1 | rev) )
+				dym opt in ${names[@]}
+					if [ "$opt" != "" ]; then
+						oldaapt="$(cat $mart_set | grep "settings_aapt" | cut -d"=" -f2)"
+						sed -i "s/$oldaapt/$opt/g" $mart_set
+						settings_menu;
+					fi
+				done; break;;
 			5) main_menu; break;;
 			6) main_menu; break;;
 			7) #Auto update options
@@ -413,10 +462,51 @@ ${tbl}${ku}$l_build_rom_menu${no}
 }
 
 translate_main() {
-	decode="$target/$currentpr/apk_decode"
 	if [ ! -d "$target$/currentpr/apk_decode" ]; then
 		mkdir -p $target/$currentpr/apk_decode
 	fi
+	decode="$target/$currentpr/apk_decode"
+	repv="$(cat $mart_set | grep "settings_repo_version" | cut -d"=" -f2)"
+	replang=""
+	replang="$(cat $mart_set | grep "settings_repo_language" | cut -d"=" -f2)"
+	replink="$(cat $tools/data/repositories/$repv | egrep -v '(^#|^$)' | grep "$replang" | grep "mart_repositories" | cut -d"=" -f2)"
+	bnr;
+	echo -e "${hi}$l_repo_download$no\n"
+	git clone $replink $tools/data/repo_download/$replang/
+	brs;
+	echo -e "${hi}$l_install_framework$no"
+	brs;
+	cat $tools/data/framework/framework_list | egrep -v '(^#|^$)' | while read flist; do
+			$apktool if $target/$currentpr/$flist
+		done
+	brs;
+	echo -e "${hi}$l_start_decode$no"
+	brs;
+	find $target/$currentpr/system/ -name "*.apk" | while read apk; do
+	apkname=$(basename $apk)
+		if [ "$(find $tools/data/repo_download/$replang/ -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" == "$(find $target/$currentpr/system/ -type f -name "$apkname" | rev | cut -d"/" -f1 | rev)" ]; then
+			brs;
+			echo -e "${hi}$l_decompiling: ${mag}$apkname$no"
+			$apktool d -m -f $apk -o $target/$currentpr/apk_decode/$apkname
+			echo -e "\n${hi}$l_insert_values_lng$no\n"
+			vin="$(find $tools/data/repo_download/$replang/ -type d -name "$apkname")"
+			vout="$(find $target/$currentpr/apk_decode/ -maxdepth 1 -type d -name "$apkname")"
+			if [ "$(find $tools/data/repo_download/$replang/ -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" == "$(find $target/$currentpr/apk_decode/ -maxdepth 1 -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" ]; then
+				cp -r $vin/res/* $vout/res/
+			fi
+			echo -e "\n${hi}$l_building: ${mag}$apkname$no\n"
+			$apktool b -c $target/$currentpr/apk_decode/$apkname
+			apkin="$(find $target/$currentpr/apk_decode/$apkname/dist/ -type f -name "$apkname")"
+			apkout="$(find $target/$currentpr/system/ | grep  "$apkname")"
+			echo -e "\n${hi}$l_copying_apk ${mag}$apkname${no} ${hi}$l_to_system$no\n"
+			if [ "$(find $target/$currentpr/apk_decode/$apkname/dist/* -type f -name "$apkname" | rev | cut -d"/" -f1 | rev)" == "$(find $target/$currentpr/system/ -type f -name "$apkname" | rev | cut -d"/" -f1 | rev)" ]; then
+				cp -r $target/$currentpr/apk_decode/$apkname/dist/* $apkout
+				else
+				echo -e "\n$l_notif_error ${mag}$apkname ${ku}$l_cant_translate_apk$no\n"
+			fi
+		fi
+		done
+		menu_build;
 }
 
 build_zip() {
@@ -484,8 +574,8 @@ debloat_menu() {
 			dym opt in ${dlist[@]}
 			if [ "$opt" != "" ]; then
 				bnr;
-				cat $tools/data/debloat/$opt | awk 'NF' | awk '{$1=$1;print}' | while read list; do
-				find $workdir -name "$list" -exec rm -r "{}" \; 2>/dev/null| echo -e "${mag}$l_deleting_bloatware: ${hi}$list$no"
+				cat $tools/data/debloat/$opt | egrep -v '(^#|^$)' | while read list; do
+				find $workdir/system/ -name "$list" -exec rm -r "{}" \; 2>/dev/null| echo -e "${mag}$l_deleting_bloatware: ${hi}$list$no"
 				done
 				olddeb="$(cat $setfd/project_info | grep "mart_debloat_info" | cut -d"=" -f2)"
 				sed -i "s/$olddeb/mart_debloat_info=1/g" $workdir/.tmp/project_info
@@ -547,10 +637,11 @@ cd $root
 export tools=$root/tools
 export imgtools=$tools/imgtools
 target=~/storage/shared/M.A.R.T
-projectdir="$target/project"
+libapktool=/data/data/per.pqy.apktool
 logsdir="$target/logs"
 mart_set="$tools/settings/settings"
 setfd="$tools/settings"
+apktool="$tools/apktool/apktool"
 mart_version=$(grep "MART V" README.md | cut -d" " -f3)
 source $tools/settings/demo -w0.1
 DEMO_PROMPT=""
