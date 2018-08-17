@@ -4,6 +4,7 @@ export l_depinstall="Memasang dependencies..."
 export l_repo_pointless_install="Memasang repo Pointless..."
 export l_create_mart_shortcut="Membuat pintasan M.A.R.T"
 export l_create_mart_shortcut_done="Selanjutnya anda dapat memulai tools dengan\nmengetikkan${no} martgk${mag} pada terminal."
+export l_apktool_url="https://androidfilehost.com/?fid=673791459329059554"
 
 # Notification
 export l_notif_done="Selesai..."
@@ -15,7 +16,8 @@ export l_notif_error="${me}Kesalahan!${no}"
 export l_notif_restart_choosen_lang="Untuk menerapkan perubahan bahasa\nmart akan memulai ulang."
 export l_notif_countdown_restart="memulai ulang dalam %2d detik"
 export l_notif_countdown_enter_menu="Masuk menu utama dalam%2d detik"
-export l_missing_dep_alert="Termux API tidak terpasang! Install untuk dapat menggunakan tool ini."
+export l_missing_dep_alert_termuxapi="Termux API tidak terpasang! Install untuk dapat menggunakan tool ini."
+export l_missing_dep_alert_apktool="Apktool-X tidak terpasang! Install untuk dapat menggunakan tool ini."
 
 # Navigation
 export l_exit_massage="${hi}Terima kasih sudah menggunakan M.A.R.T.\nJika tools ini bermanfaat silahkan share, report bugs,\natau donasi seiklasnya.\n\nAutor,\n"

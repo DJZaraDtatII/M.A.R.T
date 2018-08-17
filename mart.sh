@@ -34,7 +34,12 @@ echo -e "$tbl$mag$devider$no"
 first_install() {
 	echo -e "${mag}l_first_alert"
 	if [ -z "$(pm list packages | grep "termux.api")" ]; then
-		echo -e "${me}$l_missing_dep_alert$no\n"
+		echo -e "${me}$l_missing_dep_alert_termuxapi$no\n"
+		sleep 3
+		exit
+	fi
+	if [ -z "$(pm list packages | grep "per.pqy.apktool")" ]; then
+		echo -e "${me}$l_missing_dep_alert_apktool$no\n"
 		sleep 3
 		exit
 	fi
@@ -46,7 +51,12 @@ first_install() {
 	echo -e "\n${hi}$l_notif_done"
 	sleep 2
 	p "\n${ku}$l_create_mart_shortcut${no}\n"
-	ln -s $root/gk.sh $PREFIX/bin/mart
+	if [ -f "$PREFIX/bin/mart" ]; then
+		rm $PREFIX/bin/mart
+		ln -s $root/gk.sh $PREFIX/bin/mart
+		else
+		ln -s $root/gk.sh $PREFIX/bin/mart
+	fi
 	sleep 2
 	p "\n${hi}$l_notif_done\n${no}\n${mag}$l_create_mart_shortcut_done${no}"
 	sed -i "s/settings_first_run=1/settings_first_run=0/g" $mart_set
