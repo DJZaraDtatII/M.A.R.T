@@ -1,6 +1,6 @@
 # MART V0.1.180817
 Mobile Android ROM Translation Tools using Termux
-##Dependencies
+## Dependencies
 - Termux https://play.google.com/store/apps/details?id=com.termux
 - Termux API https://play.google.com/store/apps/details?id=com.termux.api
 - Apktool-X v7.3.3 by Andro-Black https://androidfilehost.com/?fid=673791459329059554
