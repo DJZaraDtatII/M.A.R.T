@@ -1,12 +1,13 @@
 # MART V0.1.180817
-Mobile Android ROM Translation Tools
+Mobile Android ROM Translation Tools using Termux
+##Dependencies
+- Termux https://play.google.com/store/apps/details?id=com.termux
+- Termux API https://play.google.com/store/apps/details?id=com.termux.api
+- Apktool-X v7.3.3 by Andro-Black https://androidfilehost.com/?fid=673791459329059554
 ## Requirements:
 - CPU architecture    : aarch64
 - Android version     : 7.0+
 - Free storage space  : 6 GB+
-## How to use:
-- Download Termux on Play Store
-- Allow Termux to access storage
 #####
 - Command install:
 - `$ pkg update && pkg upgrade` enter 
@@ -17,6 +18,7 @@ Mobile Android ROM Translation Tools
 #####
 - Command launch:
 - `$ ./mart.sh` from M.A.R.T directory
+- or `$ mart`
 #####
 > This tools only tested on Mi5s yet.
 > Please help me to make this tool better
