@@ -462,6 +462,8 @@ ${tbl}${ku}$l_build_rom_menu${no}
 }
 
 translate_main() {
+	logdir="$target/$currentpr/.tmp"
+	rm -r $logdir/*.log 2>&1 > /dev/null
 	if [ ! -d "$target$/currentpr/apk_decode" ]; then
 		mkdir -p $target/$currentpr/apk_decode
 	fi
@@ -471,38 +473,48 @@ translate_main() {
 	replang="$(cat $mart_set | grep "settings_repo_language" | cut -d"=" -f2)"
 	replink="$(cat $tools/data/repositories/$repv | egrep -v '(^#|^$)' | grep "$replang" | grep "mart_repositories" | cut -d"=" -f2)"
 	bnr;
-	echo -e "${hi}$l_repo_download$no\n"
-	git clone $replink $tools/data/repo_download/$replang/
+	echo -e "${hi}$l_repo_download$no"
+	if [ ! -d "$tools/data/repo_download/$replang" ]; then
+		echo -e "${hi}$l_repo_download$no"
+		git clone $replink $tools/data/repo_download/$replang
+		echo -e "\r${mag}OK$no"
+		else
+		echo -e "\r${mag}OK$no"
+	fi
 	brs;
 	echo -e "${hi}$l_install_framework$no"
 	brs;
 	cat $tools/data/framework/framework_list | egrep -v '(^#|^$)' | while read flist; do
-			$apktool if $target/$currentpr/$flist
+			$apktool if $target/$currentpr/$flist 2>&1 | tee -a $logdir/install_framework.logs
 		done
 	brs;
 	echo -e "${hi}$l_start_decode$no"
-	brs;
 	find $target/$currentpr/system/ -name "*.apk" | while read apk; do
 	apkname=$(basename $apk)
 		if [ "$(find $tools/data/repo_download/$replang/ -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" == "$(find $target/$currentpr/system/ -type f -name "$apkname" | rev | cut -d"/" -f1 | rev)" ]; then
 			brs;
 			echo -e "${hi}$l_decompiling: ${mag}$apkname$no"
-			$apktool d -m -f $apk -o $target/$currentpr/apk_decode/$apkname
-			echo -e "\n${hi}$l_insert_values_lng$no\n"
+			$apktool d -s -f $apk -o $target/$currentpr/apk_decode/$apkname 2>&1 | tee -a $logdir/decompile.log
 			vin="$(find $tools/data/repo_download/$replang/ -type d -name "$apkname")"
 			vout="$(find $target/$currentpr/apk_decode/ -maxdepth 1 -type d -name "$apkname")"
 			if [ "$(find $tools/data/repo_download/$replang/ -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" == "$(find $target/$currentpr/apk_decode/ -maxdepth 1 -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" ]; then
-				cp -r $vin/res/* $vout/res/
+				echo -e "\n${hi}$l_insert_values_lng$no"
+				cp -R $vin/res/* $vout/res/
+				echo -e "\r${mag}OK$no"
 			fi
 			echo -e "\n${hi}$l_building: ${mag}$apkname$no\n"
-			$apktool b -c $target/$currentpr/apk_decode/$apkname
-			apkin="$(find $target/$currentpr/apk_decode/$apkname/dist/ -type f -name "$apkname")"
-			apkout="$(find $target/$currentpr/system/ | grep  "$apkname")"
-			echo -e "\n${hi}$l_copying_apk ${mag}$apkname${no} ${hi}$l_to_system$no\n"
-			if [ "$(find $target/$currentpr/apk_decode/$apkname/dist/* -type f -name "$apkname" | rev | cut -d"/" -f1 | rev)" == "$(find $target/$currentpr/system/ -type f -name "$apkname" | rev | cut -d"/" -f1 | rev)" ]; then
-				cp -r $target/$currentpr/apk_decode/$apkname/dist/* $apkout
+			$apktool b -c $target/$currentpr/apk_decode/$apkname 2>&1 | tee -a $logdir/compile.log
+			if [ -d "$target/$currentpr/apk_decode/$apkname/dist" ]; then
+				apkin="$(find $target/$currentpr/apk_decode/$apkname/dist/ -type f -name "$apkname")"
+				apkout="$(find $target/$currentpr/system/ | grep  "/$apkname" | sed "s/\/$apkname/\//g")"
+				echo -e "\n${hi}$l_copying_apk ${mag}$apkname${no} ${hi}$l_to_system$no"
+				cp -R $target/$currentpr/apk_decode/$apkname/dist/* $apkout
+				rm -R $target/$currentpr/apk_decode/$apkname
+				echo -e "\r${mag}OK$no"
 				else
+				rm -R $target/$currentpr/apk_decode/$apkname
 				echo -e "\n$l_notif_error ${mag}$apkname ${ku}$l_cant_translate_apk$no\n"
+				echo "$apkname" >>$logdir/list_apk_failed.log
 			fi
 		fi
 		done
