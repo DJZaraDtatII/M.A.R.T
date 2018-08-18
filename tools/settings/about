@@ -1,23 +1,29 @@
-kontributor:
-  • rendiix (owner)
-  • 
-  •
+M.A.R.T Mobile Android ROM Translator
+
+Adalah alat untuk injek bahasa kedalam ROM Android.
+Saat ini tools hanya tersedia untuk perangkat
+berarsitektur ARM aarch64.
+
+Untuk pengembangan, saya sangat senang
+atas laporan kesalahan (bugs) yang ditemukan,
+saran peningkatan atau penambahan fitur.
+
+Bagi yang ingin ikut berkontribusi untuk menjadikan
+M.A.R.T lebih baik silahkan kontak saya di
+email: vanzdobz@gmail.com
+
+---------------------------------------------
+
+Kontributor:
+  • rendiix (gkdev)
 
 Kredit:
   • xpirt@xda untuk sdat2img.py
   • superr@github untuk source make_ext4fs dan inspirasi
-  • Andro Black untuk apktool v7.3.3 https://androidfilehost.com/?fid=673791459329059554
-  • 
+  • Andro Black untuk Apktool-X arm64 v7.3.3
+  • Termux app
 
 Donasi:
   • rendiix: 0812-2514-5217 (hanya menerima dlm bentuk pulsa)
-  •
 
-
-
-
-
-
-
-ENTER = keluar
-
+Repositories:

@@ -26,6 +26,7 @@ export l_wrong_input="${me}Masukan salah!$no"
 export l_insert_options="Masukkan pilihan: "
 export l_exit="Keluar"
 export l_back="Kembali"
+export l_enter_back="ENTER untuk kembali"
 
 # Main Menu
 export l_title_main_menu_info="Info:"
@@ -39,7 +40,7 @@ export l_title_main_menu_rom_extract="Ekstrak menu"
 export l_title_main_menu_build="Build ROM"
 export l_title_main_menu_delete_project="Hapus proyek"
 export l_title_main_menu_settings="Pengaturan"
-export l_title_main_menu_about="Tentang M.A.R.T"
+export l_title_main_menu_about="Tentang M.A.R.T dan credit"
 
 # Settings Menu
 export l_title_settings_menu="Menu Pengaturan"
@@ -71,7 +72,7 @@ export l_delete_project_error="adalah proyek default.\nSilahkan pilih proyek lai
 
 # Extract menu
 export l_extract_menu_summary="Extract menu: "
-export l_extract_menu_from_zip="Ektrak dari zip: "
+export l_extract_menu_from_zip="Ektrak dari zip"
 export l_extract_menu_from_system="Extract dari root/system"
 export l_extract_missing_zip="Tidak ada file *.zip dalam folder:"
 export l_extract_reinsert_zip="Silahkan masukkan rom.zip kedalam folder:"
@@ -79,6 +80,7 @@ export l_extract_notif="Mengekstrak:"
 export l_extract_unpack_notif="Unpacking:"
 export l_extract_convert_notif="Mengkonvert:"
 export l_extract_done="Proses ekstrak selesai..."
+export l_dump_system_partition="Dump system partition..."
 
 # Build ROM menu
 export l_project_build_info="Info ROM:"

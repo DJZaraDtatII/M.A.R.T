@@ -1,4 +1,4 @@
-# MART V0.1.180817
+# MART V0.1.180818
 Mobile Android ROM Translation Tools using Termux
 ## Dependencies
 - Termux https://play.google.com/store/apps/details?id=com.termux
@@ -18,7 +18,6 @@ Mobile Android ROM Translation Tools using Termux
 #####
 - Command launch:
 - `$ ./mart.sh` from M.A.R.T directory
-- or `$ mart`
 #####
 > This tools only tested on Mi5s yet.
 > Please help me to make this tool better

@@ -4,6 +4,7 @@ export l_depinstall="Memasang dependencies..."
 export l_repo_pointless_install="Memasang repo Pointless..."
 export l_create_mart_shortcut="Membuat pintasan M.A.R.T"
 export l_create_mart_shortcut_done="Selanjutnya anda dapat memulai tools dengan\nmengetikkan${no} martgk${mag} pada terminal."
+export l_apktool_url="https://androidfilehost.com/?fid=673791459329059554"
 
 # Notification
 export l_notif_done="Selesai..."
@@ -15,7 +16,8 @@ export l_notif_error="${me}Kesalahan!${no}"
 export l_notif_restart_choosen_lang="Untuk menerapkan perubahan bahasa\nmart akan memulai ulang."
 export l_notif_countdown_restart="memulai ulang dalam %2d detik"
 export l_notif_countdown_enter_menu="Masuk menu utama dalam%2d detik"
-export l_missing_dep_alert="Termux API tidak terpasang! Install untuk dapat menggunakan tool ini."
+export l_missing_dep_alert_termuxapi="Termux API tidak terpasang! Install untuk dapat menggunakan tool ini."
+export l_missing_dep_alert_apktool="Apktool-X tidak terpasang! Install untuk dapat menggunakan tool ini."
 
 # Navigation
 export l_exit_massage="${hi}Terima kasih sudah menggunakan M.A.R.T.\nJika tools ini bermanfaat silahkan share, report bugs,\natau donasi seiklasnya.\n\nAutor,\n"
@@ -24,6 +26,7 @@ export l_wrong_input="${me}Masukan salah!$no"
 export l_insert_options="Masukkan pilihan: "
 export l_exit="Keluar"
 export l_back="Kembali"
+export l_enter_back="ENTER untuk kembali"
 
 # Main Menu
 export l_title_main_menu_info="Info:"
@@ -37,7 +40,7 @@ export l_title_main_menu_rom_extract="Ekstrak menu"
 export l_title_main_menu_build="Build ROM"
 export l_title_main_menu_delete_project="Hapus proyek"
 export l_title_main_menu_settings="Pengaturan"
-export l_title_main_menu_about="Tentang M.A.R.T"
+export l_title_main_menu_about="Tentang M.A.R.T dan credit"
 
 # Settings Menu
 export l_title_settings_menu="Menu Pengaturan"
@@ -69,7 +72,7 @@ export l_delete_project_error="adalah proyek default.\nSilahkan pilih proyek lai
 
 # Extract menu
 export l_extract_menu_summary="Extract menu: "
-export l_extract_menu_from_zip="Ektrak dari zip: "
+export l_extract_menu_from_zip="Ektrak dari zip"
 export l_extract_menu_from_system="Extract dari root/system"
 export l_extract_missing_zip="Tidak ada file *.zip dalam folder:"
 export l_extract_reinsert_zip="Silahkan masukkan rom.zip kedalam folder:"
@@ -77,6 +80,7 @@ export l_extract_notif="Mengekstrak:"
 export l_extract_unpack_notif="Unpacking:"
 export l_extract_convert_notif="Mengkonvert:"
 export l_extract_done="Proses ekstrak selesai..."
+export l_dump_system_partition="Dump system partition..."
 
 # Build ROM menu
 export l_project_build_info="Info ROM:"

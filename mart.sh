@@ -97,21 +97,19 @@ settings_menu() {
 	ech="${tbl}${ku}$l_title_settings_menu${no}
 
 $l_title_settings_summary_repo
- 1. $l_title_settings_repositories_version @: $cya$repo_version$no
- 2. $l_title_settings_lang_translate @: $cya$repo_lang$no
+ 1) $l_title_settings_repositories_version @: $cya$repo_version$no
+ 2) $l_title_settings_lang_translate @: $cya$repo_lang$no
 
 $l_title_settings_summary_apktool
- 3. $l_title_settings_apktool_version @: $cya$apktool_v$no
- 4. $l_title_settings_aapt @: $cya$aapt_v$no
- 5. $l_title_settings_smali @: $cya$smali_v$no
- 6. $l_title_settings_baksmali @: $cya$baksmali_v$no
+ 3) $l_title_settings_apktool_version @: $cya$apktool_v$no
+ 4) $l_title_settings_aapt @: $cya$aapt_v$no
 
 $l_title_settings_summary_mart
- 7. $l_title_settings_auto_update @: $cya$update_togle$no
- 8. $l_title_settings_check_update
- 9. $l_title_settings_mart_language
+ 5) $l_title_settings_auto_update @: $cya$update_togle$no
+ 6) $l_title_settings_check_update
+ 7) $l_title_settings_mart_language
  
- 0. $ku$l_back_main$no"
+ q) $ku$l_back_main$no"
 	echo -e "$ech" | awk -F"@" 'NR==1,NR==18{ printf "%-25s %s\n", $1,$2} '
 	brs;
 	echo -e "${ku}$l_insert_options${no}";
@@ -170,9 +168,7 @@ $l_title_settings_summary_mart
 						settings_menu;
 					fi
 				done; break;;
-			5) main_menu; break;;
-			6) main_menu; break;;
-			7) #Auto update options
+			5) #Auto update options
 				if [[ "$(cat $mart_set | grep "settings_auto_update" | cut -d"=" -f2)" == "1" ]]; then
 					echo -e "$mag"
 					toggle_auto_update="$l_auto_update_off"
@@ -198,8 +194,8 @@ $l_title_settings_summary_mart
     						settings_menu;
     					fi
 				fi; break;;
-			8) check_update; break;;
-			9) #language settings
+			6) check_update; break;;
+			7) #language settings
 				while :; do
 				bnr;
 				echo -e "${tbl}${ku}$l_title_settings_summary_list_available_language${no}\n"
@@ -217,7 +213,7 @@ $l_title_settings_summary_mart
 					./mart.sh
 				fi
 				done; break;;
-			0) main_menu; break;;
+			q) main_menu; break;;
 			y) isntall_update; break;;
 			*) echo -e "${me}$l_title_main_menu_wrong_options${no}";;
 		esac
@@ -351,10 +347,10 @@ menu_rom_extract() {
 	bnr
 	echo -e "${ku}$l_extract_menu_summary$no
 
- 1. $l_extract_menu_from_zip
- 2. $l_extract_menu_from_system
+ 1) $l_extract_menu_from_zip
+ 2) $l_extract_menu_from_system
 
- 0. ${ku}$l_back$no
+ ${ku}b) $l_back$no
 
  $l_insert_options
  "
@@ -401,10 +397,12 @@ menu_rom_extract() {
 					main_menu 
 				fi
 				done ; break;;
-			2) #must be on root mode to use this feature
-				echo "null"
-				sleep 3 ; main_menu ; break;;
-			0) main_menu ; break;;
+			2) # must be on root mode to use this feature
+				bnr;
+				echo -e "${hi}$l_dump_system_partition$no\n"
+				
+				break;;
+			b) main_menu ; break;;
 			*) echo "masukan salah"
 		esac
 	done
@@ -416,13 +414,13 @@ dym() {
 	v=$1
 	shift 2
 	for e in "$@" ; do
-		echo " ${i}. $e"
+		echo " ${i}) $e"
 		i=i+1
 	done
-	echo -e "\n${tbl}${ku} m. $l_back_main$no"
+	echo -e "\n${ku} b) $l_back_main$no"
 	echo -e "\n$l_insert_options"
 	read -i "" REPLY
-	if [ "$REPLY" = "m" ]; then
+	if [ "$REPLY" = "b" ]; then
 		main_menu;
 	fi
 	i="$REPLY"
@@ -436,10 +434,16 @@ dym() {
 }
 
 about_mart() {
+	repo_version="$(cat $mart_set | grep "settings_repo_version" | cut -d"=" -f 2)"
+	repo_lang="$(cat $mart_set | grep "settings_repo_language" | cut -d"=" -f 2)"
 	bnr;
-	about="$mag$(cat $setfd/about)$no"
+	about="$mag$(cat $setfd/about)"
 	p "$about"
-	echo ""
+	about2=$(cat $tools/data/repositories/$repo_version | egrep -v '(^#|^$)' | grep "mart_repositories" | cut -d"=" -f3 | sed -r 's/ / by: /g' | while read credit; do
+		echo -e "  • $credit"
+	done)
+	p "$mag$about2"
+	echo -e "\n$l_enter_back$no"
 	read -s -n 1
 	main_menu;
 }
@@ -454,11 +458,11 @@ menu_build() {
 	echo -e "
 ${tbl}${ku}$l_build_rom_menu${no}
 
-  1. $l_translate_menu
-  2. $l_debloat_menu : $l_debloat_status_toggle $debloattogle
-  3. $l_repack
+  1) $l_translate_menu
+  2) $l_debloat_menu : $l_debloat_status_toggle $debloattogle
+  3) $l_repack
   
-  0. ${ku}$l_back$no
+  ${ku}b) $l_back$no
 "
 	echo -e "${ku}$l_insert_options${no}";
 	while read env; do
@@ -466,7 +470,7 @@ ${tbl}${ku}$l_build_rom_menu${no}
 			1) translate_main; break;;
 			2) debloat_menu; break;;
 			3) build_zip; break;;
-			0) main_menu; break;;
+			b) main_menu; break;;
 		esac
 	done
 }
@@ -625,15 +629,16 @@ $l_title_main_menu_mart_version @: ${mag}$mart_version$no ${hi}$update_avail$no
 
 ${tbl}${ku}$l_title_main_menu${no}
 
-  1. $l_title_main_menu_new_project
-  2. $l_title_main_menu_continue_project
-  3. $l_title_main_menu_delete_project
-  4. $l_title_main_menu_rom_extract
-  5. $l_title_main_menu_build
-  6. $l_title_main_menu_settings
-  7. $l_title_main_menu_about
+  1) $l_title_main_menu_new_project
+  2) $l_title_main_menu_continue_project
+  3) $l_title_main_menu_delete_project
+  4) $l_title_main_menu_rom_extract
+  5) $l_title_main_menu_build
+  6) $l_title_main_menu_settings
   
-  0. ${me}$l_exit$no
+  i) $l_title_main_menu_about
+  
+  ${me}q) $l_exit$no
 "
 	echo -e "$mmenu" | awk -F"@" 'NR==2,NR==20{ printf "%-15s %s\n", $1,$2} '
 	brs
@@ -646,8 +651,8 @@ ${tbl}${ku}$l_title_main_menu${no}
 			4) menu_rom_extract; break;;
 			5) menu_build; break;;
 			6) settings_menu; break;;
-			7) about_mart; break;;
-			0) quit; break;;
+			i) about_mart; break;;
+			q) quit; break;;
 			*) echo -e "$l_wrong_input";;
 		esac
 	done
