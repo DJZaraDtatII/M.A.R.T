@@ -198,7 +198,7 @@ $l_title_settings_summary_mart
 			7) #language settings
 				while :; do
 				bnr;
-				echo -e "${tbl}${ku}$l_title_settings_summary_list_available_language${no}\n"
+				echo -e "${tbl}${ku}$l_title_settings_repositories_lang:${no}\n"
 				names=""
 				names=( $(ls $tools/lang | cut -d"-" -f1) )
 				dym opt in ${names[@]}
@@ -414,11 +414,11 @@ dym() {
 	v=$1
 	shift 2
 	for e in "$@" ; do
-		echo " ${i}) $e"
+		echo -e " ${tbl}${i}) ${mag}$e${no}"
 		i=i+1
 	done
-	echo -e "\n${ku} b) $l_back_main$no"
-	echo -e "\n$l_insert_options"
+	echo -e "\n${tbl}${ku} b) $l_back_main$no"
+	echo -e "\n${tbl}$l_insert_options$no"
 	read -i "" REPLY
 	if [ "$REPLY" = "b" ]; then
 		main_menu;
@@ -427,7 +427,7 @@ dym() {
 		if [[ $i -gt 0 && $i -le $# ]]; then
 		export $v="${!i}"
 		else
-		echo -e "$l_wrong_input"
+		echo -e "${tbl}$l_wrong_input"
 		export $v=""
 		sleep 2
 		fi
@@ -476,16 +476,11 @@ ${tbl}${ku}$l_build_rom_menu${no}
 }
 
 translate_main() {
-	logdir="$target/$currentpr/.tmp"
-	rm -r $logdir/*.log 2>&1 > /dev/null
-	if [ ! -d "$target$/currentpr/apk_decode" ]; then
-		mkdir -p $target/$currentpr/apk_decode
-	fi
-	decode="$target/$currentpr/apk_decode"
 	repv="$(cat $mart_set | grep "settings_repo_version" | cut -d"=" -f2)"
 	replang=""
 	replang="$(cat $mart_set | grep "settings_repo_language" | cut -d"=" -f2)"
 	replink="$(cat $tools/data/repositories/$repv | egrep -v '(^#|^$)' | grep "$replang" | grep "mart_repositories" | cut -d"=" -f2)"
+	logdir="$target/$currentpr/.tmp"
 	bnr;
 	echo -e "${hi}$l_repo_download$no"
 	if [ ! -d "$tools/data/repo_download/$replang" ]; then
@@ -503,12 +498,17 @@ translate_main() {
 		done
 	brs;
 	echo -e "${hi}$l_start_decode$no"
+	rm -r $logdir/*.log 2>&1 > /dev/null
+	if [ ! -d "$target$/currentpr/apk_decode" ]; then
+		mkdir -p $target/$currentpr/apk_decode
+	fi
+	decode="$target/$currentpr/apk_decode"
 	find $target/$currentpr/system/ -name "*.apk" | while read apk; do
 	apkname=$(basename $apk)
 		if [ "$(find $tools/data/repo_download/$replang/ -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" == "$(find $target/$currentpr/system/ -type f -name "$apkname" | rev | cut -d"/" -f1 | rev)" ]; then
 			brs;
 			echo -e "${hi}$l_decompiling: ${mag}$apkname$no"
-			$apktool d -s -f $apk -o $target/$currentpr/apk_decode/$apkname 2>&1 | tee -a $logdir/decompile.log
+			$apktool d -s -f $apk -o $decode/$apkname 2>&1 | tee -a $logdir/decompile.log
 			vin="$(find $tools/data/repo_download/$replang/ -type d -name "$apkname")"
 			vout="$(find $target/$currentpr/apk_decode/ -maxdepth 1 -type d -name "$apkname")"
 			if [ "$(find $tools/data/repo_download/$replang/ -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" == "$(find $target/$currentpr/apk_decode/ -maxdepth 1 -type d -name "$apkname" | rev | cut -d"/" -f1 | rev)" ]; then
@@ -517,25 +517,29 @@ translate_main() {
 				echo -e "\r${mag}OK$no"
 			fi
 			echo -e "\n${hi}$l_building: ${mag}$apkname$no\n"
-			$apktool b -c $target/$currentpr/apk_decode/$apkname 2>&1 | tee -a $logdir/compile.log
+			$apktool b -c $decode/$apkname 2>&1 | tee -a $logdir/compile.log
 			if [ -d "$target/$currentpr/apk_decode/$apkname/dist" ]; then
 				apkin="$(find $target/$currentpr/apk_decode/$apkname/dist/ -type f -name "$apkname")"
 				apkout="$(find $target/$currentpr/system/ | grep  "/$apkname" | sed "s/\/$apkname/\//g")"
 				echo -e "\n${hi}$l_copying_apk ${mag}$apkname${no} ${hi}$l_to_system$no"
-				cp -R $target/$currentpr/apk_decode/$apkname/dist/* $apkout
-				rm -R $target/$currentpr/apk_decode/$apkname
+				cp -R $decode/$apkname/dist/* $apkout
+				rm -R $decode/$apkname
 				echo -e "\r${mag}OK$no"
 				else
-				rm -R $target/$currentpr/apk_decode/$apkname
+				rm -R $decode/$apkname
 				echo -e "\n$l_notif_error ${mag}$apkname ${ku}$l_cant_translate_apk$no\n"
 				echo "$apkname" >>$logdir/list_apk_failed.log
 			fi
 		fi
 		done
+		failed_list="$(cat $logdir/list_apk_failed.log)"
+		echo -e "\n${tbl}${ku}l_list_apk_failed$no\n"
+		echo -e "${mag}$failed_list$no"
+		echo -e "\n${tbl}${ku}$l_list_apk_failed_tips$no"
 		menu_build;
 }
 
-build_zip() {
+repack_dat() {
 	bnr;
 	p "${hi}$l_build_img\n$no"
 	if [ -f "$workdir/orig_rom/file_contexts.bin" ]; then
@@ -568,6 +572,10 @@ build_zip() {
     rm -r $workdir/.tmp/sparse.img
     echo -e "$no"
     echo -e "${hi}$l_notif_done$no\n"
+}
+
+build_zip() {
+	repack_dat;
     p "${hi}$l_compress_zip\n$no"
     mv $workdir/.tmp/system.* $workdir/orig_rom/
 	echo -e "${ku}$l_insert_zip_name$no"
