@@ -14,6 +14,7 @@ tbl="\e[1m"
 dim="\e[2m"
 no="\e[0m"
 bnr() {
+clear
 clm=$(tput cols)
 banner1="* M.A.R.T - Mobile Android ROM Translator *"
 banner2="* by gk-dev *"
