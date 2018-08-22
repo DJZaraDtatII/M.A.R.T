@@ -14,7 +14,6 @@ tbl="\e[1m"
 dim="\e[2m"
 no="\e[0m"
 bnr() {
-clear
 clm=$(tput cols)
 banner1="* M.A.R.T - Mobile Android ROM Translator *"
 banner2="* by gk-dev *"
@@ -309,10 +308,11 @@ menu_continue_project() {
 				sed -i "s/$currentpr/$opt/g" $mart_set
 				sleep 2
 				main_menu;
-			break
 			fi
+			break
 		done
 }
+
 menu_delete_project() {
 	while :; do
 	countp=""
@@ -338,6 +338,7 @@ menu_delete_project() {
         			sleep 2
         		continue
         	fi
+        break
         done
 }
 menu_rom_extract() {
@@ -396,6 +397,7 @@ menu_rom_extract() {
 					done
 					main_menu 
 				fi
+				break
 				done ; break;;
 			2) # must be on root mode to use this feature
 				bnr;
@@ -459,8 +461,9 @@ menu_build() {
 ${tbl}${ku}$l_build_rom_menu${no}
 
   1) $l_translate_menu
-  2) $l_debloat_menu : $l_debloat_status_toggle $debloattogle
-  3) $l_repack
+  2) $l_values_pick
+  3) $l_debloat_menu : $l_debloat_status_toggle $debloattogle
+  4) $l_repack
   
   ${ku}b) $l_back$no
 "
@@ -468,13 +471,78 @@ ${tbl}${ku}$l_build_rom_menu${no}
 	while read env; do
 		case $env in
 			1) translate_main; break;;
-			2) debloat_menu; break;;
-			3) build_zip; break;;
+			2) values_pick; break;;
+			3) debloat_menu; break;;
+			4) build_zip; break;;
 			b) main_menu; break;;
 		esac
 	done
 }
 
+values_pick() {
+	bnr;
+	echo -e "${tbl}${ku}$l_choose_locale:$no\n"
+	while :; do
+		localelist=$(cat $datadir/locale/locale_list | cut -d" " -f1)
+		dym opt in ${localelist[@]}
+			if [ "$opt" != "" ]; then
+				val0="$opt"
+				val1="$(cat $datadir/locale/locale_list | grep "$opt" | cut -d" " -f2)"
+				val2="$(cat $datadir/locale/locale_list | grep "$opt" | cut -d" " -f3)"
+			fi
+			if [ "$val2" != "" ]; then
+				eval2=", values-$val2"
+			fi
+			bnr
+			echo -e "${tbl}${ku}$l_locale_picked:$no\n"
+			echo -e "$l_locale_name: $opt"
+			echo -e "$l_locale_code: $val1"
+			echo -e "$l_locale_variant: $val2"
+			echo -e "$l_locale_folder: values-$val1$eval2\n"
+		break
+	done
+	echo -e "${hi}$l_install_framework$no"
+	logdir="$target/$currentpr/.tmp"
+	cat $tools/data/framework/framework_list | egrep -v '(^#|^$)' | while read flist; do
+			$apktool if $target/$currentpr/$flist 2>&1 >$logdir/install_framework.logs
+		done
+	brs;
+	echo -e "${hi}$l_start_decode$no"
+	rm -r $logdir/*.log 2>&1 > /dev/null
+	if [ ! -d "$target$/currentpr/values_$val0" ]; then
+		mkdir -p $target/$currentpr/values_$val0
+	fi
+	decode="$target/$currentpr/apk_decode"
+	values_dump="$target/$currentpr/values_$val0"
+	find $target/$currentpr/system/ -name "*.apk" | while read apk; do
+	apkname=$(basename $apk)
+	brs;
+	echo -e "${hi}$l_decompiling: ${mag}$apkname$no\n"
+	$apktool d -s -f $apk -o $decode/$apkname 2>&1 >$logdir/decompile.log
+	if [ "$val2" = "$val2" ]; then
+		inval2="$(find $decode/$apkname -type d -name "values-$val2")"
+		outval2="$(find $decode/$apkname -type d -name "values-$val2" | sed "s/apk_decode/values-$val0/")"
+		if [ "$inval2" != "" ]; then
+			echo -e "${hi}l_copying_apk values-$val1$no\n"
+			mkdir -p $outval2
+			cp -R $inval2/* $outval2
+		fi
+	fi
+	inval="$(find $decode/$apkname -type d -name "values-$val1")"
+	outval="$(find $decode/$apkname -type d -name "values-$val1" | sed "s/apk_decode/values-$val0/")"
+	if [ "$inval" != "" ]; then
+		echo -e "${hi}l_copying_apk values-$val1$no\n"
+		mkdir -p $outval
+		cp -R $inval/* $outval
+	fi
+	rm -R $decode/$apkname
+	done
+	brs
+	echo -e "${hi}$l_notif_done$no\n"
+	echo -e "$l_file_store_at: ${mag}$target/$currentpr/values_$val0$no"
+	sleep 5
+	build_menu
+}
 translate_main() {
 	repv="$(cat $mart_set | grep "settings_repo_version" | cut -d"=" -f2)"
 	replang=""
@@ -677,6 +745,7 @@ logsdir="$target/logs"
 mart_set="$tools/settings/settings"
 setfd="$tools/settings"
 apktool="$tools/apktool/apktool"
+datadir="$tools/data"
 mart_version=$(grep "MART V" README.md | cut -d" " -f3)
 source $tools/settings/demo -w0.1
 DEMO_PROMPT=""
