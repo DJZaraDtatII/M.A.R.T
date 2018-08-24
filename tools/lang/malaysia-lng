@@ -1,0 +1,137 @@
+# Auto create on 24-August-2018 16:03:02
+
+# This malaysia translation is generated
+# automatically using auto translate.
+# Please understand if there is a wrong spelling.
+
+# First Run
+export l_first_alert="Menyediakan ..."
+export l_depinstall="Pasang dependensi ..."
+export l_repo_pointless_install="Memasang repo tanpa titik ..."
+export l_create_mart_shortcut="Buat pintasan M.A.R.T"
+
+# Notification
+export l_notif_done="Selesai ..."
+export l_notif_on="Hidup"
+export l_notif_off="Mati"
+export l_notif_yes="Ya"
+export l_notif_no="Tidak"
+export l_notif_error="Ralat!"
+export l_notif_restart_choosen_lang="Untuk memohon perubahan bahasa, M.A.R.T akan memulakan semula."
+export l_notif_countdown_restart="mulakan semula dalam% 2d saat"
+export l_notif_countdown_enter_menu="Masukkan menu utama dalam% 2d saat"
+export l_missing_dep_alert_termuxapi="Termux API tidak dipasang! Pasang untuk dapat menggunakan alat ini."
+export l_missing_dep_alert_apktool="Apktool-X tidak dipasang! Pasang untuk dapat menggunakan alat ini."
+
+# Navigation
+export l_exit_massage="Terima kasih kerana menggunakan M.A.R.T. Sekiranya alat ini berguna, sila kongsi, laporkan pepijat, atau mendermakan sebanyak mungkin."
+export l_back_main="Menu utama"
+export l_wrong_input="Input salah!"
+export l_insert_options="Masukkan pilihan:"
+export l_exit="Keluar"
+export l_back="Kembali"
+export l_enter_back="ENTER untuk kembali"
+
+# Main Menu
+export l_title_main_menu_info="Maklumat:"
+export l_title_main_menu_mart_version="Versi MART"
+export l_title_main_menu="Menu utama"
+export l_title_main_menu_back="Kembali ke menu utama"
+export l_title_main_menu_current_project="Projek lalai"
+export l_title_main_menu_new_project="Buat projek baru"
+export l_title_main_menu_continue_project="Teruskan projek lain"
+export l_title_main_menu_rom_extract="Ekstrak menu"
+export l_title_main_menu_build="Bina ROM"
+export l_title_main_menu_delete_project="Keluarkan projek"
+export l_title_main_menu_settings="Tetapan"
+export l_title_main_menu_about="Mengenai M.A.R.T dan kredit"
+
+# Settings Menu
+export l_title_settings_menu="Menu tetapan"
+export l_title_settings_summary_repo="Tetapan Repo:"
+export l_title_settings_summary_apktool="Tetapan APKTool:"
+export l_title_settings_apktool_version="Pilih versi apktool"
+export l_title_settings_aapt="Pilih versi AAPT"
+export l_title_settings_smali="Pilih versi smali"
+export l_title_settings_baksmali="Pilih versi Baksmali"
+export l_title_settings_repositories_version="Pilih versi MIUI"
+export l_title_settings_lang_translate="Bahasa penterjemahan"
+export l_title_settings_summary_mart="Tetapan M.A.R.T:"
+export l_title_settings_auto_update="Kemas kini automatik"
+export l_title_settings_check_update="Semak kemas kini"
+export l_title_settings_mart_language="Bahasa MART"
+export l_title_settings_update_available="Kemas kini tersedia"
+export l_title_settings_repositories_lang="Pilih bahasa"
+export l_title_settings_choosen_mart_lang="dipilih sebagai bahasa lalai"
+
+# Poject Menu
+export l_create_new_project="Masukkan nama projek"
+export l_create_new_project_empty_input="Nama tidak boleh kosong"
+export l_create_new_project_already="Nama projek sudah ada, masukkan nama lain"
+export l_continue_project_summary="Pilih projek lalai:"
+export l_continue_project_choosen="dipilih sebagai projek lalai"
+export l_delete_project_summary="Pilih folder projek untuk memadam:"
+export l_delete_project_choosen="Telah dihapuskan"
+export l_delete_project_error="adalah projek lalai. Sila pilih projek lain"
+
+# Extract menu
+export l_extract_menu_summary="Extract menu: "
+export l_extract_menu_from_zip="Ekstrak dari zip"
+export l_extract_menu_from_system="Ekstrak dari sistem yang dipasang"
+export l_extract_missing_zip="Tidak ada file *.zip dalam folder:"
+export l_extract_reinsert_zip="Sila masukkan rom.zip ke dalam folder:"
+export l_extract_notif="Ekstrak:"
+export l_extract_unpack_notif="Membongkar:"
+export l_extract_convert_notif="Tukar:"
+export l_extract_done="Proses ekstrak selesai ..."
+export l_dump_system_partition="Partition sistem dump ..."
+
+# Build ROM menu
+export l_project_build_info="Maklumat ROM:"
+export l_build_rom_menu="Membina menu ROM:"
+export l_translate_menu="Terjemah"
+export l_values_pick="Pemilih tempatan"
+export l_choose_locale="Pilih bahasa yang akan diambil"
+export l_locale_picked="Bahasa yang dipilih"
+export l_locale_name="Negara"
+export l_locale_code="Kod negara"
+export l_locale_variant="Varian locale"
+export l_locale_folder="Nilai folder"
+export l_debloat_menu="Keluarkan bloatware"
+export l_list_debloat="Pilih senarai debloat:"
+export l_file_store_at="Fail disimpan pada"
+export l_deleting_bloatware="Padam"
+export l_debloat_status_toggle="Status yg dibebaskan ="
+export l_repack="Buat zip zip boleh kilat"
+export l_repack_from_device="ROM dipasang semula semula"
+
+# Build ZIP
+export l_build_img="Membuat img mentah ..."
+export l_fc_type_alert="File_contexts.bin dikesan, ditukar ..."
+export l_make_sparse="Buat gambar jarang ..."
+export l_make_dat="Membuat DAT img ..."
+export l_compress_zip="Mampat zip ..."
+export l_insert_zip_name="Masukkan nama zip (tekan enter untuk melangkau)"
+export l_build_done_alert="Selesai ... fail disimpan dalam:"
+
+# Update
+export l_check_update="Semak kemas kini ..."
+export l_check_update_error="Ralat! Tidak dapat menyemak kemas kini"
+export l_no_update="Tiada kemas kini yang tersedia"
+export l_update_avail="Kemas kini tersedia"
+export l_downloading_update="Muat turun kemas kini ..."
+export l_auto_update_off="Matikan kemas kini automatik? y / n"
+export l_auto_update_on="Hidupkan kemas kini automatik? y / n"
+
+# Translate main
+export l_repo_download="Muat turun repositori ..."
+export l_install_framework="Memasang rangka kerja ..."
+export l_start_decode="Mula membongkar APK ..."
+export l_decompiling="Hancurkan"
+export l_insert_values_lng="Masukkan bahasa ..."
+export l_building="Mengembalikan semula"
+export l_copying_apk="Salin:"
+export l_to_system="ke folder sistem"
+export l_cant_translate_apk="tidak dapat diterjemahkan"
+export l_list_apk_failed="Senarai apk gagal untuk diterjemahkan:"
+export l_list_apk_failed_tips="Anda mesti menterjemah manual permohonan."

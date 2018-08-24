@@ -211,6 +211,7 @@ $l_title_settings_summary_mart
 							sleep 1
 						done
 					./mart.sh
+					break
 				fi
 				done; break;;
 			q) main_menu; break;;
@@ -272,7 +273,7 @@ menu_new_project() {
 	export romname=$(echo "$romname1" | sed 's/ /_/g' | sed 's/@/_/g')
 	if [[ -z "$romname" ]]; then
 		bnr;
-		echo -e "$l_notif_error \n"
+		echo -e "${me}l_notif_error${no} \n"
 		echo -e "$l_create_new_project_empty_input"
 		sleep 2
 		continue
@@ -289,7 +290,7 @@ menu_new_project() {
 			main_menu;
 		else
 			bnr;
-			echo -e "$l_notif_error \n"
+			echo -e "${me}l_notif_error${no} \n"
 			echo -e "$l_create_new_project_already"
 			sleep 2
 			romname=""
@@ -364,7 +365,7 @@ menu_rom_extract() {
 				findzip=""
 				findzip="$(ls $workdir | grep ".zip")"
 				if [ -z $findzip ]; then
-					echo -e "$l_notif_error\n"
+					echo -e "${me}l_notif_error${no}\n"
 					echo -e "$l_extract_missing_zip ${co}$currentpr$no\n"
 					echo -e "$l_extract_reinsert_zip ${co}$currentpr$no"
 					sleep 5
@@ -430,7 +431,7 @@ dym() {
 		if [[ $i -gt 0 && $i -le $# ]]; then
 		export $v="${!i}"
 		else
-		echo -e "${tbl}$l_wrong_input"
+		echo -e "${tbl}${me}$l_wrong_input${no}"
 		export $v=""
 		sleep 2
 		fi
@@ -596,7 +597,7 @@ translate_main() {
 				echo -e "\r${mag}OK$no"
 				else
 				rm -R $decode/$apkname
-				echo -e "\n$l_notif_error ${mag}$apkname ${ku}$l_cant_translate_apk$no\n"
+				echo -e "\n${me}l_notif_error${no} ${mag}$apkname ${ku}$l_cant_translate_apk$no\n"
 				echo "$apkname" >>$logdir/list_apk_failed.log
 			fi
 		fi
@@ -730,7 +731,7 @@ ${tbl}${ku}$l_title_main_menu${no}
 			6) settings_menu; break;;
 			i) about_mart; break;;
 			q) quit; break;;
-			*) echo -e "$l_wrong_input";;
+			*) echo -e "${me}$l_wrong_input${no}";;
 		esac
 	done
 }
