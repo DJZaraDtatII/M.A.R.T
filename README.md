@@ -1,4 +1,4 @@
-# MART V0.1.180824
+# MART V0.1.180827
 Mobile Android ROM Translation Tools using Termux
 ## Dependencies
 - Termux https://play.google.com/store/apps/details?id=com.termux
@@ -23,3 +23,12 @@ Mobile Android ROM Translation Tools using Termux
 > Please help me to make this tool better
 ##### 
 vanzdobz@gmail.com
+#####
+- Screenshoot:
+
+![image](https://raw.githubusercontent.com/rendiix/rendiix.github.io/master/screensoot/mart1.png)
+![image](https://raw.githubusercontent.com/rendiix/rendiix.github.io/master/screensoot/mart2.png)
+![image](https://raw.githubusercontent.com/rendiix/rendiix.github.io/master/screensoot/mart3.png)
+![image](https://raw.githubusercontent.com/rendiix/rendiix.github.io/master/screensoot/mart4.png)
+
+

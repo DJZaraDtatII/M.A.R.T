@@ -88,10 +88,10 @@ settings_menu() {
 	baksmali_v="$(cat $mart_set | grep "settings_baksmali" | cut -d"=" -f 2)"
 	if [[ "$(cat $mart_set | grep "settings_auto_update" | cut -d"=" -f2)" == "1" ]]; then
 		update_togle=""
-		update_togle="$l_notif_on"
+		update_togle="$l_notif_update_on"
 	else
 		update_togle=""
-		update_togle="$l_notif_off"
+		update_togle="$l_notif_update_off"
 	fi
 	bnr;
 	ech="${tbl}${ku}$l_title_settings_menu${no}

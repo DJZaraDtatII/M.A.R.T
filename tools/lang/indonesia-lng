@@ -7,8 +7,8 @@ export l_apktool_url="https://androidfilehost.com/?fid=673791459329059554"
 
 # Notification
 export l_notif_done="Selesai..."
-export l_notif_on="Hidup"
-export l_notif_off="Mati"
+export l_notif_update_on="Matikan"
+export l_notif_update_off="Hidupkan"
 export l_notif_yes="Ya"
 export l_notif_no="Tidak"
 export l_notif_error="Kesalahan!"
