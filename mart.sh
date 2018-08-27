@@ -31,7 +31,7 @@ devider="$(printf '%*s' $clm | tr " " "=")"
 echo -e "$tbl$mag$devider$no"
 }
 
-first_install() {
+with_pm_check() {
 	echo -e "${mag}l_first_alert"
 	if [ -z "$(pm list packages | grep "termux.api")" ]; then
 		echo -e "${me}$l_missing_dep_alert_termuxapi$no\n"
@@ -42,6 +42,12 @@ first_install() {
 		echo -e "${me}$l_missing_dep_alert_apktool$no\n"
 		sleep 3
 		exit
+	fi
+}
+
+first_install() {
+	if [ -z "$(pm list packages 2>&1 | grep "android.os.DeadObjectException")" ]; then
+		with_pm_check
 	fi
 	yes | pkg up
 	yes | pkg install pv
