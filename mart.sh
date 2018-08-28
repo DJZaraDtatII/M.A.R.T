@@ -32,7 +32,7 @@ echo -e "$tbl$mag$devider$no"
 }
 
 with_pm_check() {
-	echo -e "${mag}l_first_alert"
+	echo -e "${mag}$l_first_alert"
 	if [ -z "$(pm list packages | grep "termux.api")" ]; then
 		echo -e "${me}$l_missing_dep_alert_termuxapi$no\n"
 		sleep 3
@@ -52,8 +52,15 @@ first_install() {
 	yes | pkg up
 	yes | pkg install pv
 	p "${ku}$l_depinstall"
-	echo -e "$mag"
-	yes | pkg install binutils* python readline coreutils unzip tar file figlet curl gnup* grep ncurses* p7zip zip unzip proot util-linux sed
+	echo -e "$mag\n"
+	cat $tools/settings/dependencies | while read dep; do
+		if [ -z "$(dpkg -l | grep "$dep")" ]; then
+			echo -e "$l_notif_installing \"$dep\"\n"
+			yes | pkg install $dep
+		else
+			echo -e "\"$dep\" $l_notif_already_installed\n"
+		fi
+	done
 	echo -e "\n${hi}$l_notif_done"
 	sleep 2
 	p "\n${ku}$l_create_mart_shortcut${no}\n"
@@ -100,22 +107,18 @@ settings_menu() {
 		update_togle="$l_notif_update_off"
 	fi
 	bnr;
-	ech="${tbl}${ku}$l_title_settings_menu${no}
-
+	ech="${tbl}${ku}$l_title_settings_menu${no}\n
 $l_title_settings_summary_repo
  1) $l_title_settings_repositories_version @: $cya$repo_version$no
- 2) $l_title_settings_lang_translate @: $cya$repo_lang$no
-
+ 2) $l_title_settings_lang_translate @: $cya$repo_lang$no\n
 $l_title_settings_summary_apktool
  3) $l_title_settings_apktool_version @: $cya$apktool_v$no
- 4) $l_title_settings_aapt @: $cya$aapt_v$no
-
+ 4) $l_title_settings_aapt @: $cya$aapt_v$no\n
 $l_title_settings_summary_mart
  5) $l_title_settings_auto_update @: $cya$update_togle$no
  6) $l_title_settings_check_update
- 7) $l_title_settings_mart_language
- 
- q) $ku$l_back_main$no"
+ 7) $l_title_settings_mart_language\n 
+ q) $ku$l_back_main$no\n"
 	echo -e "$ech" | awk -F"@" 'NR==1,NR==18{ printf "%-25s %s\n", $1,$2} '
 	brs;
 	echo -e "${ku}$l_insert_options${no}";
@@ -354,15 +357,11 @@ menu_rom_extract() {
 	currentpr="$(cat $mart_set | grep "settings_current_project" | cut -d"=" -f 2)"
 	workdir="$target/$currentpr"
 	bnr
-	echo -e "${ku}$l_extract_menu_summary$no
-
+	echo -e "${ku}$l_extract_menu_summary$no\n
  1) $l_extract_menu_from_zip
- 2) $l_extract_menu_from_system
-
- ${ku}b) $l_back$no
-
- $l_insert_options
- "
+ 2) $l_extract_menu_from_system\n
+ ${ku}b) $l_back$no\n
+ ${ku}$l_insert_options$no\n"
 	while read env; do
 		case $env in
 			1) #start extracting zip from workdir
@@ -424,9 +423,9 @@ dym() {
 	v=$1
 	shift 2
 	for e in "$@" ; do
-		echo -e " ${tbl}${i}) ${mag}$e${no}"
+		echo -e " ${tbl}${i})${no} ${mag}$e${no}"
 		i=i+1
-	done
+	done | xargs -L2 | column -t -c5
 	echo -e "\n${tbl}${ku} b) $l_back_main$no"
 	echo -e "\n${tbl}$l_insert_options$no"
 	read -i "" REPLY
@@ -465,24 +464,165 @@ menu_build() {
 	else
 		debloattogle="$l_notif_yes"
 	fi
-	echo -e "
-${tbl}${ku}$l_build_rom_menu${no}
-
+	echo -e "${tbl}${ku}$l_build_rom_menu${no}\n
   1) $l_translate_menu
-  2) $l_values_pick
-  3) $l_debloat_menu : $l_debloat_status_toggle $debloattogle
-  4) $l_repack
-  
-  ${ku}b) $l_back$no
-"
+  2) $l_xml_translate_menu
+  3) $l_values_pick
+  4) $l_debloat_menu : $l_debloat_status_toggle $debloattogle
+  5) $l_repack\n
+  ${ku}b) $l_back$no\n"
 	echo -e "${ku}$l_insert_options${no}";
 	while read env; do
 		case $env in
 			1) translate_main; break;;
+			2) xml_menu; break;;
 			2) values_pick; break;;
 			3) debloat_menu; break;;
 			4) build_zip; break;;
 			b) main_menu; break;;
+		esac
+	done
+}
+
+
+xml_main() {
+	bnr;
+	test_connection;
+	echo -e "${hi}$l_xml_start$no\n"
+	if [ "$concheck" = "FAILED" ]; then
+		xml_menu;
+	fi
+	if [ -f "$xml_dir/*.xml" ]; then
+		echo -e "${co}l_no_xml_file$no"
+		read -s
+		xml_menu;
+	fi
+	cp -r $xml_dir/strings.xml $xml_dir/${xml_target}_strings.xml
+	cat $xml_dir/strings.xml | cut -d">" -f2 | cut -d"<" -f1 | egrep -n -v '(^#|^$)' | while read line; do
+		rwin="$line"
+		lin="$(echo -e "$rwin" | cut -d":" -f1)"
+		win="$(echo -e "$rwin" | cut -d":" -f2-)"
+		n=0
+		wout=""
+		while [ -z "$wout" ] && [ "$n" -lt 4 ]; do
+			n=$(( n + 1 ))
+			wout="$($trans -b -e $xml_tengine -s $xin -t $xout "$win")"
+		done 
+		if [ -z "$wout" ]; then
+			echo -e "${mag}$l_xml_line: \"${ku}$lin\" ${tbl}${me}$l_notif_error$no"
+			echo -e "${mag}$l_xml_stdout $xml_source:${no} \"$win\" ${co}$l_cant_translate_apk$no\n"
+		else
+			echo -e "${mag}$l_xml_line: ${ku}$lin$no"
+			echo -e "${mag}$l_xml_stdout $xml_source:${no} \"$win\""
+			echo -e "${mag}$l_xml_stdout $xml_target:${no} \"$wout\"\n"
+			sed -i -e "${lin}s|$win|$wout|" "$xml_dir/${xml_target}_strings.xml"
+		fi
+		done
+}
+
+test_connection() {
+	bnr;
+	echo -e "${hi}$l_check_con_title$no\n"
+	if [ -z "$(curl -s --head http://www.google.com | head -n1)" ]; then
+		echo -e "${me}$l_notif_error${no} ${ku}$l_check_con_error${no}\n\n${ku}$l_check_con_error_tips$no"
+		export concheck="FAILED"
+		read -s
+	else
+		echo -e "${tbl}${ku}$l_notif_ok$no"
+		export concheck="OK"
+		sleep 2
+	fi
+}
+xml_menu() {
+	trans="$tools/data/xml_translator/trans"
+	lconf="$datadir/xml_translator/xml_translator.cfg"
+	xml_dir="$target/$currentpr/XML-translator"
+	xml_source="$(cat $lconf | grep "xml_source" | cut -d"=" -f2)"
+	xml_target="$(cat $lconf | grep "xml_target" | cut -d"=" -f2)"
+	xin="$(cat $lconf | grep "xml_code_in" | cut -d"=" -f2)"
+	xout="$(cat $lconf | grep "xml_code_out" | cut -d"=" -f2)"
+	xml_tengine="$(cat $lconf | grep "xml_translate_engine" | cut -d"=" -f2)"
+	if [ ! -d "$xml_dir" ]; then
+		mkdir -p $xml_dir
+	fi
+	bnr;
+	xmlmenu="${ku}$l_title_main_menu_info$no\n${co}$l_xml_alert$no\n
+${tbl}${ku}$l_title_xml_translator_menu:$no\n
+  1) $l_title_xml_source @: ${cya}$xml_source$no
+  2) $l_title_xml_target @: ${cya}$xml_target$no
+  3) $l_title_xml_translate_engine @: ${cya}$xml_tengine$no\n 
+  t) $l_title_do_xmltrans\n
+  ${ku}b) $l_back$no\n"
+	echo -e "$xmlmenu" | awk -F"@" 'NR==1,NR==20{ printf "%-30s %s\n", $1,$2} '
+	echo -e "${ku}$l_insert_options${no}";
+	while read env; do
+		case $env in
+			1) #Insert source lang
+				sourcelang=""
+				while [[ -z "$sourcelang" ]]; do
+					bnr;
+					echo -e "${tbl}${ku}$l_title_xml_insert_code_lng$no"
+					slang=""
+					read -e slang
+					if [ -z "$slang" ]; then
+						echo -e "${me}$l_create_new_project_empty_input$no"
+						sleep 2
+						elif [ -z "$(cat $lconf | grep "$slang" | head -n1)" ]; then
+						echo -e "\n\"$slang\" ${co}$l_xml_lng_not_exist$no"
+						sleep 2
+						else
+						sourcelang="$(cat $lconf | grep ":$slang" | head -n1 | cut -d":" -f1)"
+						old="$(cat $lconf | grep "xml_source" )"
+						oldc="$(cat $lconf | grep "xml_code_in" )"
+						sed -i "s/$old/xml_source=$sourcelang/g" $lconf
+						sed -i "s/$old/xml_code_in=$slang/g" $lconf
+						echo -e "\n${hi}$l_xml_source_choosen:${no} \"$sourcelang\""
+						sleep 2
+						xml_menu;
+					fi
+				done
+				break;;
+			2) #Insert target lang
+				targetlang=""
+				while [[ -z "$targetlang" ]]; do
+					bnr;
+					echo -e "${tbl}${ku}$l_title_xml_insert_code_lng$no"
+					slang=""
+					read -e slang
+					if [ -z "$slang" ]; then
+						echo -e "${me}$l_create_new_project_empty_input$no"
+						sleep 2
+						elif [ -z "$(cat $lconf | grep "$slang" | head -n1)" ]; then
+						echo -e "\n\"$slang\" ${co}$l_xml_lng_not_exist$no"
+						sleep 2
+						else
+						targetlang="$(cat $lconf | grep ":$slang" | head -n1 | cut -d":" -f1)"
+						old="$(cat $lconf | grep "xml_target" )"
+						oldc="$(cat $lconf | grep "xml_code_out" )"
+						sed -i "s/$old/xml_target=$targetlang/g" $lconf
+						sed -i "s/$old/xml_code_out=$slang/g" $lconf
+						echo -e "\n${hi}$l_xml_target_choosen:${no} \"$targetlang\""
+						sleep 2
+						xml_menu;
+					fi
+				done
+				break;;
+			3) #Choose translate engine 
+				bnr;
+				echo -e "${tbl}${ku}$l_title_xml_translate_engine:$no\n"
+				while :; do
+				names=""
+				names=( $($trans -S | tr -s ' ' | cut -d" " -f2) )
+				dym opt in ${names[@]}
+					if [ "$opt" != "" ]; then
+						old="$(cat $lconf | grep "xml_search_engine" | cut -d"=" -f2)"
+						sed -i "s/$old/$opt/g" $lconf
+						xml_menu;
+					fi
+				done; break;;
+			t) xml_main; break;;
+			b) menu_build; break;;
+			*) echo -e "${me}$l_wrong_input${no}";;
 		esac
 	done
 }
@@ -662,7 +802,7 @@ build_zip() {
 		export zipname=$(echo "$zipname1" | sed 's/ /_/g' | sed 's/@/_/g')
 	fi
 	cd $workdir/orig_rom/
-	zip -r $workdir/${zipname}.zip
+	zip -r $workdir/${zipname}.zip ./
 	echo -e "\n${hi}$l_build_done_alert$no"
 	echo -e "\n$workdir/${zipname}.zip\n"
 	cd $root
@@ -705,25 +845,18 @@ main_menu() {
 		fi
 	currentpr="$(cat $mart_set | grep "settings_current_project" | cut -d"=" -f 2)"
 	export workdir=$target/$currentpr
-	mmenu="
-${tbl}${ku}$l_title_main_menu_info${no}
-
+	mmenu="${tbl}${ku}$l_title_main_menu_info${no}\n
 $l_title_main_menu_current_project @: ${cya}$currentpr$no
-$l_title_main_menu_mart_version @: ${mag}$mart_version$no ${hi}$update_avail$no
-
-${tbl}${ku}$l_title_main_menu${no}
-
+$l_title_main_menu_mart_version @: ${mag}$mart_version$no ${hi}$update_avail$no\n
+${tbl}${ku}$l_title_main_menu${no}\n
   1) $l_title_main_menu_new_project
   2) $l_title_main_menu_continue_project
   3) $l_title_main_menu_delete_project
   4) $l_title_main_menu_rom_extract
   5) $l_title_main_menu_build
-  6) $l_title_main_menu_settings
-  
-  i) $l_title_main_menu_about
-  
-  ${me}q) $l_exit$no
-"
+  6) $l_title_main_menu_settings\n
+  i) $l_title_main_menu_about\n 
+  ${me}q) $l_exit$no\n"
 	echo -e "$mmenu" | awk -F"@" 'NR==2,NR==20{ printf "%-15s %s\n", $1,$2} '
 	brs
 	echo -e "${ku}$l_insert_options${no}";
@@ -741,6 +874,7 @@ ${tbl}${ku}$l_title_main_menu${no}
 		esac
 	done
 }
+
 termux-setup-storage
 gkhome=$(pwd)
 export root=$gkhome

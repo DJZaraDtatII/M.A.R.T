@@ -1,6 +1,6 @@
 # Don't delete this file
 settings_first_run=1
-settings_auto_update=0
+settings_auto_update=1
 
 # MART_settings
 settings_repo_version=repo_miui_9
