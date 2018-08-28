@@ -3,7 +3,6 @@ export l_first_alert="Sedang mempersiapkan..."
 export l_depinstall="Memasang dependencies..."
 export l_repo_pointless_install="Memasang repo Pointless..."
 export l_create_mart_shortcut="Membuat pintasan M.A.R.T"
-export l_apktool_url="https://androidfilehost.com/?fid=673791459329059554"
 
 # Notification
 export l_notif_installing="Memasang"

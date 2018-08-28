@@ -1,4 +1,4 @@
-# Auto create on 24-August-2018 16:03:02
+# Auto create on 29-August-2018 00:21:22
 
 # This english translation is generated
 # automatically using auto translate.
@@ -11,14 +11,17 @@ export l_repo_pointless_install="Installing Pointless repo ..."
 export l_create_mart_shortcut="Make shortcuts of M.A.R.T"
 
 # Notification
+export l_notif_installing="Install"
+export l_notif_already_installed="Is mounted"
 export l_notif_done="Finish ..."
-export l_notif_on="Life"
-export l_notif_off="Die"
+export l_notif_update_on="Turn off"
+export l_notif_update_off="Turn on"
+export l_notif_ok="OK,"
 export l_notif_yes="Yes"
 export l_notif_no="No"
 export l_notif_error="Error!"
 export l_notif_restart_choosen_lang="To apply language change, M.A.R.T will restart."
-export l_notif_countdown_restart="reboot in% 2d seconds"
+export l_notif_countdown_restart="restart in% 2d seconds"
 export l_notif_countdown_enter_menu="Enter the main menu in% 2d seconds"
 export l_missing_dep_alert_termuxapi="Termux API is not installed! Install to be able to use this tool."
 export l_missing_dep_alert_apktool="Apktool-X is not installed! Install to be able to use this tool."
@@ -47,6 +50,7 @@ export l_title_main_menu_settings="Settings"
 export l_title_main_menu_about="About M.A.R.T and credit"
 
 # Settings Menu
+export l_title_settings="Settings"
 export l_title_settings_menu="Settings menu"
 export l_title_settings_summary_repo="Repo settings:"
 export l_title_settings_summary_apktool="APKTool settings:"
@@ -66,7 +70,7 @@ export l_title_settings_choosen_mart_lang="selected as the default language"
 
 # Poject Menu
 export l_create_new_project="Enter the name of the project"
-export l_create_new_project_empty_input="The name cannot be empty"
+export l_create_new_project_empty_input="Input cannot be empty"
 export l_create_new_project_already="The project name already exists, enter another name"
 export l_continue_project_summary="Select the default project:"
 export l_continue_project_choosen="selected as the default project"
@@ -89,7 +93,7 @@ export l_dump_system_partition="Dump system partition ..."
 # Build ROM menu
 export l_project_build_info="ROM Info:"
 export l_build_rom_menu="Build ROM menu:"
-export l_translate_menu="Translate"
+export l_translate_menu="Translate ROM"
 export l_values_pick="Locale picker"
 export l_choose_locale="Select the language to be taken"
 export l_locale_picked="The language chosen"
@@ -120,7 +124,7 @@ export l_check_update_error="Error! Cannot check for updates"
 export l_no_update="No updates available"
 export l_update_avail="Update available"
 export l_downloading_update="Download updates ..."
-export l_auto_update_off="Turn off automatic update? y / n"
+export l_auto_update_off="Turn off automatic updates? y / n"
 export l_auto_update_on="Turn on automatic updates? y / n"
 
 # Translate main
@@ -135,3 +139,22 @@ export l_to_system="to the system folder"
 export l_cant_translate_apk="cannot be translated"
 export l_list_apk_failed="List of apk failed to translate:"
 export l_list_apk_failed_tips="You must translate the application manual."
+
+# XML-translator
+export l_xml_translate_menu="Online strings.xml translator (beta)"
+export l_title_xml_source="Select the original language"
+export l_title_xml_insert_code_lng="Enter the language code:"
+export l_title_xml_target="Choose the translation language"
+export l_title_xml_translate_engine="Select the machine translator"
+export l_title_xml_translator_menu="XML Translator Menu"
+export l_title_do_xmltrans="Start translating"
+export l_xml_source_choosen="Pre-selected language"
+export l_xml_target_choosen="Selected target language"
+export l_xml_lng_not_exist="not found, please enter another code"
+export l_xml_alert="To be able to use this feature, make sure you have an internet connection and have entered strings.xml into the XML-Translator folder."
+export l_check_con_title="Check internet connection"
+export l_check_con_error="Cannot connect to the internet."
+export l_check_con_error_tips="Make sure you can connect to the internet and try again."
+export l_xml_start="Start translating xml ..."
+export l_xml_line="Line"
+export l_xml_stdout="Language"
