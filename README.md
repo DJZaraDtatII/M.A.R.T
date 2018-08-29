@@ -1,4 +1,4 @@
-# MART V0.1.1808291147
+# MART V0.1.1808291214
 Mobile Android ROM Translation Tools using Termux
 ## Dependencies
 - Termux https://play.google.com/store/apps/details?id=com.termux
