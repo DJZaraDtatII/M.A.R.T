@@ -476,9 +476,9 @@ menu_build() {
 		case $env in
 			1) translate_main; break;;
 			2) xml_menu; break;;
-			2) values_pick; break;;
-			3) debloat_menu; break;;
-			4) build_zip; break;;
+			3) values_pick; break;;
+			4) debloat_menu; break;;
+			5) build_zip; break;;
 			b) main_menu; break;;
 		esac
 	done
@@ -791,7 +791,6 @@ repack_dat() {
 }
 
 build_zip() {
-	repack_dat;
     p "${hi}$l_compress_zip\n$no"
     mv $workdir/.tmp/system.* $workdir/orig_rom/
 	echo -e "${ku}$l_insert_zip_name$no"
@@ -802,7 +801,7 @@ build_zip() {
 		export zipname=$(echo "$zipname1" | sed 's/ /_/g' | sed 's/@/_/g')
 	fi
 	cd $workdir/orig_rom/
-	zip -r $workdir/${zipname}.zip ./
+	zip -r $workdir/${zipname}.zip .
 	echo -e "\n${hi}$l_build_done_alert$no"
 	echo -e "\n$workdir/${zipname}.zip\n"
 	cd $root
@@ -831,9 +830,8 @@ debloat_menu() {
 				sed -i "s/$olddeb/mart_debloat_info=1/g" $workdir/.tmp/project_info
 				sleep
 				menu_build;
-			break
 			fi
-		done
+		done; break
 }
 
 main_menu() {
