@@ -2,6 +2,7 @@ brotli
 coreutils
 curl
 figlet
+findutils
 fish
 gawk
 getconf
