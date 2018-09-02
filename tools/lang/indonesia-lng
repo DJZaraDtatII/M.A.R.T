@@ -125,4 +125,5 @@ export l_xml_stdout="Bahasa"
 export l_xml_target_choosen="Bahasa target terpilih"
 export l_xml_translate_menu="Online strings.xml translator (beta)"
 export l_xml_engine="Menggunakan"
-export l_func_continue="Masukkan file yang dibutuhkan lalu tekan enter, atau \"q\" untuk keluar"
+export l_func_continue="Enter untuk lanjutkan, atau <q> untuk keluar.
+
