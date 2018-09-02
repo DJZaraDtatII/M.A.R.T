@@ -1,8 +1,8 @@
 /tools/apktool/framework_installed
 /tools/apktool/framework_installed/*apk
 /tools/data/repo_download/*
-/tools/__pycache__
-/tools/__pycache__/*
+/tools/imgtools/__pycache__
+/tools/imgtools/__pycache__/*
 /.temp
 /.temp/*
 build.sh
