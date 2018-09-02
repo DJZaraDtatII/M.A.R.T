@@ -1,6 +1,6 @@
-# Auto create on 02-September-2018 11:22:28
+# Auto create on 02-September-2018 12:03:33
 
-# This  translation is generated
+# This chinese translation is generated
 # automatically using auto translate.
 # Please understand if there is a wrong spelling.
 
@@ -131,5 +131,4 @@ export l_xml_stdout="语言"
 export l_xml_target_choosen="选定的目标语言"
 export l_xml_translate_menu="在线strings.xml翻译（测试版）"
 export l_xml_engine="使用"
-export l_func_continue="Enter untuk lanjutkan, atau <q> untuk keluar.
-
+export l_func_continue="输入以继续，或<q>退出。"
