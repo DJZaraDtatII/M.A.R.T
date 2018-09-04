@@ -712,7 +712,7 @@ unpack_dat() {
 repack_dat() {
 	if [ -f "$workdir/orig_rom/file_contexts.bin" ]; then
 		echo -e "${ku}$l_fc_type_alert$no\c"
-		$imgtools/sefcontext_decompile -x $workdir/.tmp/file_contexts $workdir/orig_rom/file_contexts.bin
+		$tools/extratools/sefcontext_decompile -x $workdir/.tmp/file_contexts $workdir/orig_rom/file_contexts.bin
 		sleep 3
 		echo -e " ${tbl}${hi}$l_notif_done$no\n"
 	fi
