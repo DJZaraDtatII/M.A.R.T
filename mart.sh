@@ -683,7 +683,14 @@ extract_zip() {
 			echo -e "$l_extract_notif ${co}$zipfile...$no\c"
 			mkdir $workdir/orig_rom
 			7z x $workdir/$zipfile -o$workdir/orig_rom >>$logdir/extract_zip.log 2>&1
-			unpack_dat
+			if [ ! -d "$workdir/orig_rom/system" ]; then
+				mv -f $workdir/orig_rom/system/system.new.dat $workdir/
+				mv -f $workdir/orig_rom/system/system.transfer.list $workdir/
+				mv -f $workdir/orig_rom/system/file_contexts.* $workdir/
+				unpack_dat
+			else
+				mv -f $workdir/orig_rom/system $workdir/system
+			fi
 			bnr;
 			echo -e " ${hi}$l_extract_done\n"
 			sleep 3
@@ -691,41 +698,41 @@ extract_zip() {
 }
 
 unpack_dat() {
-	typeimg="$(ls $workdir/orig_rom/ | grep "system.new.dat")"
-		if [ -f "$workdir/orig_rom/$typeimg" ]; then
 			export d2m=$tools/imgtools/sdat2img.py
 			bnr;
 			echo -e "\n\n\n----------[$(date +%Y-%m-%d" "%H:%M:%S)]----------\n" >>$logdir/extract_dat.log
-			echo -e "${co}$l_extract_unpack_notif ${mag}$typeimg$no\c"
-			$d2m $workdir/orig_rom/system.transfer.list $workdir/orig_rom/system.new.dat $workdir/.tmp/raw.img >>$logdir/extract_dat.log 2>&1
-			rm $workdir/orig_rom/*.dat
+			echo -e "${co}$l_extract_unpack_notif ${mag}$typeimg${no}${mag}\c"
+			$d2m $workdir/system.transfer.list $workdir/system.new.dat $workdir/.tmp/raw.img >>$logdir/extract_dat.log 2>&1
+			rm {$workdir/system.new.dat,$workdir/system.transfer.list}
 			imgsize="$(wc -c $workdir/.tmp/raw.img | cut -d" " -f1)"
 			oldnameimgsize="$(cat $setfd/project_info | grep "mart_getimgsize" | cut -d"=" -f2)"
 			busybox sed -i "s/$oldnameimgsize/$imgsize/g" $workdir/.tmp/project_info
 			mkdir $workdir/system
-			7z x -o$workdir/system/ $workdir/.tmp/raw.img >>$logdir/extract_dat.log 2>&1
+			7z x -o$workdir/system/ $workdir/.tmp/raw.img
 			rm $workdir/.tmp/raw.img
 			echo -e " ${tbl}${hi}$l_notif_ok$no\n"
-		fi
 }
 
 repack_dat() {
-	if [ -f "$workdir/orig_rom/file_contexts.bin" ]; then
+	if [ -f "$workdir/file_contexts.bin" ]; then
 		echo -e "${ku}$l_fc_type_alert$no\c"
-		$tools/extratools/sefcontext_decompile -x $workdir/.tmp/file_contexts $workdir/orig_rom/file_contexts.bin
-		sleep 3
+		$tools/extratools/sefcontext_decompile -o $workdir/file_contexts $workdir/file_contexts.bin
+		sleep 2
 		echo -e " ${tbl}${hi}$l_notif_done$no\n"
+		sleep 2
 	fi
 	echo -e "\n\n\n----------[$(date +%Y-%m-%d" "%H:%M:%S)]----------\n" >>$logdir/repack_dat.log
-	echo -e "${hi}$l_build_img\n$no\c"
+	echo -e "${ku}$l_build_img\n$no\c"
 	ukuran="$(cat $workdir/.tmp/project_info | grep "mart_getimgsize" | cut -d"=" -f2)"
-    $imgtools/make_ext4fs -T -0 -S $workdir/.tmp/file_contexts -L system -l ${ukuran} -a system $workdir/.tmp/raw.img $workdir/system/ >>$logdir/repack_dat.log 2>&1
-    echo -e " ${hi}$l_notif_done$no\n"
-    echo -e "${hi}$l_make_sparse$no\c"
-    $imgtools/img2simg $workdir/.tmp/raw.img $workdir/.tmp/sparse.img 4096 
+    $imgtools/make_ext4fs -T -0 -S $workdir/file_contexts -L system -l ${ukuran} -a system $workdir/.tmp/raw.img $workdir/system/ >>$logdir/repack_dat.log 2>&1
+    echo -e "${hi}$l_notif_done$no\n"
+    sleep 2
+    echo -e "${ku}$l_make_sparse$no\c"
+    $imgtools/img2simg $workdir/.tmp/raw.img $workdir/.tmp/sparse.img 4096
     rm -r $workdir/.tmp/raw.img
     echo -e " ${hi}$l_notif_done$no\n"
-    echo -e "${hi}$l_make_dat${no}\c"
+    sleep 2
+    echo -e "${ku}$l_make_dat${no}\c"
     echo -e "$mag"
     api="$(cat $workdir/system/build.prop | grep "ro.build.version.sdk" | cut -d"=" -f 2)"
 	if [[ $api = "21" ]]; then
@@ -788,15 +795,13 @@ menu_repack_project() {
 		case $env in
 			1) # Translate main
 				translate_main;
-				menu_repack_project;
-				 break;;
+				menu_repack_project; break;;
 			2) # Build ZIP
 				bnr;
 				repack_dat;
 				repack_zip;
-				menu_repack_project
-				break;;
-			b) main_menu ; break;;
+				menu_repack_project; break;;
+			b) main_menu; break;;
 			*) echo -e "${tbl}${me}$l_wrong_input${no}"
 		esac
 	done
@@ -823,10 +828,66 @@ menu_extra() {
 			1) xml_menu; break;;
 			2) values_pick; break;;
 			3) debloat_menu; break;;
+			4) unpack_repack_dat; break;;
 			b) main_menu; break;;
 			*) echo -e "${me}$l_wrong_input${no}";;
 		esac
 	done
+}
+
+unpack_repack_dat() {
+	bnr;
+	echo -e "${tbl}${ku}$l_unpack_repack_dat_menu$no\n
+  1) $l_urd_unpack
+  2) $l_urd_repack\n
+  ${ku}b) $l_back$no"
+  echo -e "${ku}$l_insert_options${no}";
+	while read env; do
+		case $env in
+			1) startunpackdat; break;;
+			2) startrepackdat; break;;
+			b) menu_extra; break;;
+			*) echo -e "${me}$l_wrong_input${no}";;
+		esac
+	done
+}
+
+startunpackdat() {
+				bnr;
+				filecheck=1
+				list=$(echo -e "file_contexts.bin\nsystem.new.dat\nsystem.transfer.list")
+				while read file; do
+					if [ ! -f "$workdir/$file" ];then
+						echo -e "$l_notif_file_notexist: ${co}$file$no"
+						filecheck=""
+					fi
+				done <<< "$list"
+				if [ -z "$filecheck" ]; then
+					func_continue;
+					startunpackdat
+				else
+					unpack_dat;
+					unpack_repack_dat
+				fi
+}
+
+startrepackdat() {
+	bnr:
+	if [ ! -d "$workdir/system" ]; then
+		echo -e "${ku}$l_no_systemdir ${co}$workdir$no"
+		sleep 5
+		unpack_repack_dat;
+	else
+	bnr;
+	repack_dat
+	mkdir $workdir/output_DAT
+	mv $workdir/.tmp/system.new.dat $workdir/output_DAT/
+	mv $workdir/.tmp/system.patch.dat $workdir/output_DAT/
+	mv $workdir/.tmp/system.transfer.list $workdir/output_DAT/
+	echo -e "${hi}$l_file_store_at: ${co}$workdir/output_DAT/$no"
+	sleep 5
+	unpack_repack_dat;
+	fi
 }
 
 func_continue() {
