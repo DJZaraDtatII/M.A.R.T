@@ -1,11 +1,12 @@
 /.temp
-/.temp/*
+/.temp/**
 /build/
-/build/*
+/build/**
 /tools/apktool/framework_installed
 /tools/apktool/framework_installed/*apk
-/tools/data/repo_download/*
+/tools/data/repo_download/**
 /tools/imgtools/__pycache__
-/tools/imgtools/__pycache__/*
+/tools/imgtools/__pycache__/**
+trans
 build.sh
 tr.sh
