@@ -896,9 +896,9 @@ func_continue() {
 		if [ "$func" = "q" ]; then
 			quit
 		elif [ -z "$func" ]; then
-			sleep 1
+			sleep 2
 		else
-			echo -e "${me}$l_wrong_input${no}"
+			echo -e " ${me}$l_wrong_input${no}"
 			func_continue;
 		fi
 }

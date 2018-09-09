@@ -8,3 +8,4 @@
 /tools/imgtools/__pycache__
 /tools/imgtools/__pycache__/*
 build.sh
+tr.sh
