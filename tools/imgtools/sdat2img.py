@@ -118,8 +118,9 @@ def main(argv):
                 begin = block[0]
                 end = block[1]
                 block_count = end - begin
-                print('Copying {} blocks into position {}...'.format(block_count, begin))
-
+                sys.stdout.write('\rCopying {} blocks into position {}     '.format(block_count, begin))
+                sys.stdout.flush()
+				
                 # Position output file
                 output_img.seek(begin*BLOCK_SIZE)
                 
@@ -128,7 +129,8 @@ def main(argv):
                     output_img.write(new_data_file.read(BLOCK_SIZE))
                     block_count -= 1
         else:
-            print('Skipping command %s...' % command[0])
+                    sys.stdout.write('\rSkipping command %s     ' % command[0])
+                    sys.stdout.flush()
 
     # Make file larger if necessary
     if(output_img.tell() < max_file_size):

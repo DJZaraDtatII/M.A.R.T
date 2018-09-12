@@ -60,7 +60,7 @@ first_install() {
 			yes | pkg install $dep > /dev/null 2>&1
 			echo -e "${hi}$l_notif_ok$no"
 		else
-			echo -e "\"$dep\" ${co}l_notif_already_installed$no\n"
+			echo -e "\"$dep\" ${co}$l_notif_already_installed$no\n"
 		fi
 	done
 	sleep 2
@@ -354,7 +354,7 @@ dym() {
 	for e in "$@" ; do
 		echo -e " ${tbl}${i})${no} ${mag}$e${no}"
 		i=i+1
-	done | xargs -L2 | column -t -c5
+	done | pr -ts" " --columns 2 | column -t
 	echo -e "\n${tbl}${ku} b) $l_back_main$no"
 	echo -e "\n${tbl}$l_insert_options$no"
 	read -i "" REPLY
