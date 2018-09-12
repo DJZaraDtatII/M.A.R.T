@@ -199,7 +199,6 @@ $l_title_settings_summary_mart
 				fi; break;;
 			6) check_update; break;;
 			7) #language settings
-				while :; do
 				bnr;
 				echo -e "${tbl}${ku}$l_title_settings_repositories_lang:${no}\n"
 				names=""
@@ -209,14 +208,9 @@ $l_title_settings_summary_mart
 					echo -e "${tbl}${cya}$opt${no} $l_title_settings_choosen_mart_lang"
 					busybox sed -i "s/$crlng/${opt}-lng/g" $mart_set
 					echo -e "\n$l_notif_restart_choosen_lang\n"
-						for i in {5..0}; do 
-							printf "\a\r$l_notif_countdown_restart" $i
-							sleep 1
-						done
+					sleep 3
 					./mart.sh
-					break
-				fi
-				done; break;;
+				fi; break;;
 			q) main_menu; break;;
 			y) isntall_update; break;;
 			*) echo -e "${me}$l_title_main_menu_wrong_options${no}";;
