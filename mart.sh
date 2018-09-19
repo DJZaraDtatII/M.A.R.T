@@ -53,14 +53,14 @@ first_install() {
 	fi
 	yes | pkg up > /dev/null 2>&1
 	yes | pkg install pv > /dev/null 2>&1
-	echo -e "${ku}$l_depinstall\n"
+	echo -e "${ku}$l_depinstall$no\n"
 	cat $tools/settings/dependencies | while read dep; do
 		if [ -z "$(dpkg -l | grep "$dep")" ]; then
-			echo -e "$l_notif_installing \"$dep\"\c"
+			echo -e "$l_notif_installing \"$dep\" \c"
 			yes | pkg install $dep > /dev/null 2>&1
 			echo -e "${hi}$l_notif_ok$no"
 		else
-			echo -e "\"$dep\" ${co}$l_notif_already_installed$no\n"
+			echo -e "$l_notif_installing \"$dep\" ${co}$l_notif_already_installed$no"
 		fi
 	done
 	sleep 2
