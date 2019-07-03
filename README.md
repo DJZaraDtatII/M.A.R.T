@@ -18,14 +18,14 @@ Mobile Android ROM Translation Tools using Termux
 - Free storage space  : 6 GB+
 #####
 - Command install:
-- `$ pkg update && pkg upgrade` enter 
-- `$ pkg install git` enter (skip if already installed)
-- `$ git clone https://github.com/rendiix/M.A.R.T.git` enter
-- `$ cd MART` enter
-- `$ chmod +x mart.sh` enter
-#####
-- Command launch:
-- `$ ./mart.sh` from M.A.R.T directory
+```console
+user@localhost:~$ pkg update && pkg upgrade` enter 
+user@localhost:~$ pkg install git` enter (skip if already installed)
+user@localhost:~$ git clone https://github.com/rendiix/M.A.R.T.git` enter
+user@localhost:~$ cd MART` enter
+user@localhost:M.A.R.T$ chmod +x mart.sh` enter
+user@localhost:M.A.R.T$ ./mart.sh` from M.A.R.T directory
+```
 #####
 > This tools only tested on Mi5s yet.
 
