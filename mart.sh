@@ -393,28 +393,8 @@ xml_main() {
 		func_continue;
 		xml_main;
 	fi
-	cp -r $xml_dir/strings.xml $xml_dir/${xml_target}_strings.xml
-	cat $xml_dir/strings.xml | cut -d">" -f2 | cut -d"<" -f1 | egrep -n -v '(^#|^$)' | while read line; do
-		rwin="$line"
-		lin="$(echo -e "$rwin" | cut -d":" -f1)"
-		win="$(echo -e "$rwin" | cut -d":" -f2-)"
-		n=0
-		wout=""
-		while [ -z "$wout" ] && [ "$n" -lt 4 ]; do
-			n=$(( n + 1 ))
-			wout="$($trans -b -no-auto -no-warn -no-ansi -no-bidi -e $xml_tengine -s $xin -t $xout "$win" 2>&1 | sed "s/\% 1 \$ s/ \%1\$s/g;s/\& amp/\&amp/g;s/\s\./\./g;s/\% s/ \%s/g")"
-		done 
-		if [ -z "$wout" ]; then
-			echo -e "${mag}$l_xml_line: \"${ku}$lin\" ${tbl}${me}$l_notif_error$no"
-			echo -e "${mag}$l_xml_stdout $xml_source:${no} \"$win\" ${co}$l_cant_translate_apk$no\n"
-		else
-			echo -e "${mag}$l_xml_line: ${ku}$lin$no"
-			echo -e "${mag}$l_xml_engine: ${co}$xml_tengine$no"
-			echo -e "${mag}$l_xml_stdout $xml_source:${no} \"$win\""
-			echo -e "${mag}$l_xml_stdout $xml_target:${no} \"$wout\"\n"
-			busybox sed -i "${lin}s|$win|$wout|" "$xml_dir/${xml_target}_strings.xml"
-		fi
-		done
+	$trans $xin $xout $xml_dir/*.xml
+	
 }
 
 test_connection() {
@@ -432,7 +412,7 @@ test_connection() {
 	fi
 }
 xml_menu() {
-	trans="$tools/data/xml_translator/trans"
+	trans="$tools/data/xml_translator/*.py"
 	lconf="$datadir/xml_translator/xml_translator.cfg"
 	xml_dir="$target/$currentpr/XML-translator"
 	xml_source="$(cat $lconf | grep "xml_source" | cut -d"=" -f2)"
