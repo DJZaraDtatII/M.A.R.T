@@ -6,7 +6,7 @@
 [![GitHub followers](https://img.shields.io/github/followers/rendiix.svg?style=social&label=Follow&maxAge=2592000)](https://github.com/rendiix?tab=followers)
 [![GitHub contributors](https://img.shields.io/github/contributors/rendiix/M.A.R.T.svg)](https://github.com/rendiix/M.A.R.T/graphs/contributors/)
 
-# MART V1.2.1809121104
+# MART V1.2.1809121105
 Mobile Android ROM Translation Tools using Termux
 ## Dependencies
 - Termux https://play.google.com/store/apps/details?id=com.termux
