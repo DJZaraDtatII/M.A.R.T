@@ -1,172 +1,10 @@
+#!/data/data/com.termux/files/usr/bin/env python
+# -*- coding: utf-8 -*-
+# File       : tools/data/xml_translator/gtranslate.py
+# Author     : rendiix <vanzdobz@gmail.com>
+# Create date: 19-Oct-2019 05:40
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-# This python skript extracts string resources, calls Google translate
-# and reassambles a new strings.xml as fitted for Android projects.
-
-# run via 
-
-# PYTHONIOENCODING=utf8 python3.5 gtranslate.py de en strings.xml
-
-# where firstly the environment variable PYTHONENCODING is set,
-# then python is called,
-# then the name of the current file plus argument strings, 
-# where the first argument is the language in the strings.xml,
-# the second argument is the language to translate to
-# and finally the string file as the third argument.
-
-### LANGUAGE CODES FOR REFERENCE
-
-#   af          Afrikaans
-#   ak          Akan
-#   sq          Albanian
-#   am          Amharic
-#   ar          Arabic
-#   hy          Armenian
-#   az          Azerbaijani
-#   eu          Basque
-#   be          Belarusian
-#   bem         Bemba
-#   bn          Bengali
-#   bh          Bihari
-#   xx-bork     Bork, bork, bork!
-#   bs          Bosnian
-#   br          Breton
-#   bg          Bulgarian
-#   km          Cambodian
-#   ca          Catalan
-#   chr         Cherokee
-#   ny          Chichewa
-#   zh-CN       Chinese (Simplified)
-#   zh-TW       Chinese (Traditional)
-#   co          Corsican
-#   hr          Croatian
-#   cs          Czech
-#   da          Danish
-#   nl          Dutch
-#   xx-elmer    Elmer Fudd
-#   en          English
-#   eo          Esperanto
-#   et          Estonian
-#   ee          Ewe
-#   fo          Faroese
-#   tl          Filipino
-#   fi          Finnish
-#   fr          French
-#   fy          Frisian
-#   gaa         Ga
-#   gl          Galician
-#   ka          Georgian
-#   de          German
-#   el          Greek
-#   gn          Guarani
-#   gu          Gujarati
-#   xx-hacker   Hacker
-#   ht          Haitian Creole
-#   ha          Hausa
-#   haw         Hawaiian
-#   iw          Hebrew
-#   hi          Hindi
-#   hu          Hungarian
-#   is          Icelandic
-#   ig          Igbo
-#   id          Indonesian
-#   ia          Interlingua
-#   ga          Irish
-#   it          Italian
-#   ja          Japanese
-#   jw          Javanese
-#   kn          Kannada
-#   kk          Kazakh
-#   rw          Kinyarwanda
-#   rn          Kirundi
-#   xx-klingon  Klingon
-#   kg          Kongo
-#   ko          Korean
-#   kri         Krio (Sierra Leone)
-#   ku          Kurdish
-#   ckb         Kurdish (Soranî)
-#   ky          Kyrgyz
-#   lo          Laothian
-#   la          Latin
-#   lv          Latvian
-#   ln          Lingala
-#   lt          Lithuanian
-#   loz         Lozi
-#   lg          Luganda
-#   ach         Luo
-#   mk          Macedonian
-#   mg          Malagasy
-#   ms          Malay
-#   ml          Malayalam
-#   mt          Maltese
-#   mi          Maori
-#   mr          Marathi
-#   mfe         Mauritian Creole
-#   mo          Moldavian
-#   mn          Mongolian
-#   sr-ME       Montenegrin
-#   ne          Nepali
-#   pcm         Nigerian Pidgin
-#   nso         Northern Sotho
-#   no          Norwegian
-#   nn          Norwegian (Nynorsk)
-#   oc          Occitan
-#   or          Oriya
-#   om          Oromo
-#   ps          Pashto
-#   fa          Persian
-#   xx-pirate   Pirate
-#   pl          Polish
-#   pt-BR       Portuguese (Brazil)
-#   pt-PT       Portuguese (Portugal)
-#   pa          Punjabi
-#   qu          Quechua
-#   ro          Romanian
-#   rm          Romansh
-#   nyn         Runyakitara
-#   ru          Russian
-#   gd          Scots Gaelic
-#   sr          Serbian
-#   sh          Serbo-Croatian
-#   st          Sesotho
-#   tn          Setswana
-#   crs         Seychellois Creole
-#   sn          Shona
-#   sd          Sindhi
-#   si          Sinhalese
-#   sk          Slovak
-#   sl          Slovenian
-#   so          Somali
-#   es          Spanish
-#   es-419      Spanish (Latin American)
-#   su          Sundanese
-#   sw          Swahili
-#   sv          Swedish
-#   tg          Tajik
-#   ta          Tamil
-#   tt          Tatar
-#   te          Telugu
-#   th          Thai
-#   ti          Tigrinya
-#   to          Tonga
-#   lua         Tshiluba
-#   tum         Tumbuka
-#   tr          Turkish
-#   tk          Turkmen
-#   tw          Twi
-#   ug          Uighur
-#   uk          Ukrainian
-#   ur          Urdu
-#   uz          Uzbek
-#   vi          Vietnamese
-#   cy          Welsh
-#   wo          Wolof
-#   xh          Xhosa
-#   yi          Yiddish
-#   yo          Yoruba
-#   zu          Zulu
-
 #
 #   SUBROUTINES
 #
@@ -232,6 +70,20 @@ INPUTLANGUAGE=sys.argv[1]
 OUTPUTLANGUAGE=sys.argv[2]
 INFILE=sys.argv[3]
 
+class Base:
+    # Foreground:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    # Formatting
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    # End colored text
+    END = '\033[0m'
+    NC ='\x1b[0m' # No Color
+
 # create outfile name by appending the language code to the infile name
 name, ext=os.path.splitext(INFILE)
 OUTFILE= "{name}_{OUTPUTLANGUAGE}{ext}".format(name=name,OUTPUTLANGUAGE=OUTPUTLANGUAGE,ext=ext)
@@ -246,16 +98,16 @@ for i in range(len(root)):
 #   and replace the string by its translation,
 #   descend into each string array  
     isTranslatable=root[i].get('translatable')
-    print((str(i)+" ========================="))
+    print(Base.OKGREEN + "\nLine ke   : " + Base.NC + Base.BOLD + (str(i)) + Base.END)
     if(isTranslatable=='false'):
-        print("Not translatable")
+        print(Base.WARNING + "Not translatable" + Base.END)
     if(root[i].tag=='string') & (isTranslatable!='false'):
 # Here you might want to replace root[i].text by the findall_content function
 # if you need to extract html tags
         # ~ totranslate="".join(findall_content(str(ET.tostring(root[i])),"string"))
         totranslate=root[i].text
         if(totranslate!=None):
-            print(totranslate+"\n-->\n", end='')
+            print(Base.OKGREEN + "Sumber    : " + Base.END + totranslate +Base.OKGREEN + "\nTerjemahan: " + Base.END, end='')
             root[i].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
             print(root[i].text)
     if(root[i].tag=='string-array'):
@@ -264,7 +116,7 @@ for i in range(len(root)):
 #	for each translatable string call the translation subroutine
 #   and replace the string by its translation,
             isTranslatable=root[i][j].get('translatable')
-            print((str(i)+" " + str(j) + " ========================="))
+            print(Base.OKGREEN + "\nLine ke " + Base.NC + Base.BOLD (str(i)+" " + str(j)) + Base.END)
             if(isTranslatable=='false'):
                 print("Not translatable")
             if(root[i][j].tag=='item') & (isTranslatable!='false'):
@@ -273,7 +125,7 @@ for i in range(len(root)):
                 # ~ totranslate="".join(findall_content(str(ET.tostring(root[i][j])),"item"))
                 totranslate=root[i][j].text
                 if(totranslate!=None):
-                    print(totranslate+"\n-->\n", end='')
+                    print(Base.OKGREEN + "Sumber    : " + Base.END + totranslate +Base.OKGREEN + "\nTerjemahan: " + Base.END, end='')
                     root[i][j].text=translate(totranslate,OUTPUTLANGUAGE,INPUTLANGUAGE)
                     print(root[i][j].text)
 
